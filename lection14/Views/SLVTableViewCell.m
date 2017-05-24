@@ -23,7 +23,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
-    if(self) {
+    if (self) {
         _trackName = [UILabel new];
         _photoImageView = [UIImageView new];
         _activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -33,7 +33,7 @@
         _progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
         
         _photoImageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
-        [_photoImageView setContentMode:UIViewContentModeScaleAspectFill];
+       // [_photoImageView setContentMode:UIViewContentModeScaleAspectFill];
 
         [self.contentView addSubview:_photoImageView];
         [self.contentView addSubview:_activityIndicator];
@@ -60,13 +60,6 @@
         make.right.equalTo(self.contentView.mas_right).with.offset(-8);
     }];
     
-    
-    CGSize frame = self.contentView.frame.size;
-    if (frame.width < frame.height) {
-        self.imageViewSize = CGSizeMake(frame.width -8, frame.width -8);
-    } else {
-        self.imageViewSize = CGSizeMake(frame.height -8, frame.height -8);
-    }
     [super updateConstraints];
 }
 
@@ -74,6 +67,7 @@
     self.photoImageView.image = nil;
     [self.activityIndicator stopAnimating];
     self.activityIndicator.hidden = YES;
+    self.progressView.hidden = YES;
 }
 
 

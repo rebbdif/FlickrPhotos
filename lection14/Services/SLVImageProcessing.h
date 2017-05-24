@@ -7,7 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+@import UIKit;
 
 @interface SLVImageProcessing : NSObject
+
++ (UIImage *)applyFilterToImage:(UIImage *)origin;
++ (UIImage *)cropImage:(UIImage *)origin toSize:(CGSize)itemSize;
+
 
 @end

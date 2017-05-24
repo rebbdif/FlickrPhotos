@@ -10,6 +10,7 @@
 #import "SLVItem.h"
 #import "SLVSearchResultsModel.h"
 #import "SLVNetworkManager.h"
+#import "SLVImageProcessing.h"
 
 
 @interface ImageDownloadOperation()
@@ -44,17 +45,27 @@
             dispatch_semaphore_signal(imageDownloadedSemaphore);
         }];
     }];
+    
     NSOperation *cropOperation = [NSBlockOperation blockOperationWithBlock:^{
-        //self.item.photo = downloadedImage;
+        downloadedImage = [SLVImageProcessing cropImage:downloadedImage toSize:self.imageViewSize];
     }];
     [cropOperation addDependency:downloadOperation];
+    
+    NSOperation *applyFilter = [NSBlockOperation blockOperationWithBlock:^{
+        downloadedImage = [SLVImageProcessing applyFilterToImage:downloadedImage];
+    }];
+    [applyFilter addDependency:cropOperation];
     
     self.status = SLVImageStatusDownloading;
     [self.innerQueue addOperation:downloadOperation];
     dispatch_semaphore_wait(imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
-    [self.innerQueue addOperation:cropOperation];
-    [self.innerQueue waitUntilAllOperationsAreFinished];
+    [self.innerQueue addOperations:@[cropOperation,applyFilter] waitUntilFinished:YES];
+    self.status = SLVImageStatusFiltered;
+    if (downloadedImage) {
     [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
+    } else {
+        self.status = SLVImageStatusNone;
+    }
     NSLog(@"completed work with image for row: %ld", (long)self.indexPath.row);
 }
 
