@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+@import UIKit;
 
 @class SLVItem;
 @class SLVNetworkManager;
@@ -24,5 +25,6 @@ typedef NS_ENUM(NSInteger, SLVImageStatus) {
 @property (strong, nonatomic) NSIndexPath *indexPath;
 @property (assign, nonatomic, readonly) SLVImageStatus status;
 @property (weak, nonatomic) SLVNetworkManager *networkManager;
+@property (assign, nonatomic) CGSize imageViewSize;
 
 @end

@@ -44,7 +44,7 @@ static  NSString *const reuseID = @"cell";
     [self.searchBar sizeToFit];
     
     [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
-    self.tableView.rowHeight = 400;
+    self.tableView.rowHeight = 340;
     ///
     [self.searchBar endEditing:YES];
     __weak typeof(self) weakself = self;
@@ -74,7 +74,7 @@ static  NSString *const reuseID = @"cell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.model.items.count;
+    return self.model.items.count ? self.model.items.count : 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -82,21 +82,7 @@ static  NSString *const reuseID = @"cell";
     SLVItem *currentItem = self.model.items[indexPath.row];
     if (!currentItem.photo) {
         if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
-            if (!self.imageOperations[indexPath]) {
-                ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
-                imageDownloadOperation.indexPath = indexPath;
-                imageDownloadOperation.item = currentItem;
-                imageDownloadOperation.networkManager = self.model.networkManager;
-                imageDownloadOperation.completionBlock = ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                        cell.photoImageView.image = currentItem.photo;
-                        [cell.activityIndicator stopAnimating];
-                    });
-                };
-                [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
-                [self.imagesQueue addOperation:imageDownloadOperation];
-            }
+            [self loadImageForIndexPath:indexPath];
         }
         cell.activityIndicator.hidden = NO;
         [cell.activityIndicator startAnimating];
@@ -110,32 +96,32 @@ static  NSString *const reuseID = @"cell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)loadImagesForOnscreenRows
-{
-    if (self.model.items.count > 0)
-    {
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath {
+    SLVItem *currentItem = self.model.items[indexPath.row];
+    if (!currentItem.photo) {
+        if (!self.imageOperations[indexPath]) {
+            ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
+            imageDownloadOperation.indexPath = indexPath;
+            imageDownloadOperation.item = currentItem;
+            imageDownloadOperation.networkManager = self.model.networkManager;
+            imageDownloadOperation.completionBlock = ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                    cell.photoImageView.image = currentItem.photo;
+                    [cell.activityIndicator stopAnimating];
+                });
+            };
+            [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
+            [self.imagesQueue addOperation:imageDownloadOperation];
+        }
+    }
+}
+
+- (void)loadImagesForOnscreenRows {
+    if (self.model.items.count > 0) {
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths)
-        {
-            SLVItem *currentItem = self.model.items[indexPath.row];
-            if (!currentItem.photo)
-            {
-                if (!self.imageOperations[indexPath]) {
-                    ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
-                    imageDownloadOperation.indexPath = indexPath;
-                    imageDownloadOperation.item = currentItem;
-                    imageDownloadOperation.networkManager = self.model.networkManager;
-                    imageDownloadOperation.completionBlock = ^{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                            cell.photoImageView.image = currentItem.photo;
-                            [cell.activityIndicator stopAnimating];
-                        });
-                    };
-                    [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
-                    [self.imagesQueue addOperation:imageDownloadOperation];
-                }
-            }
+        for (NSIndexPath *indexPath in visiblePaths) {
+            [self loadImageForIndexPath:indexPath];
         }
     }
 }
@@ -143,29 +129,15 @@ static  NSString *const reuseID = @"cell";
 
 #pragma mark - UIScrollViewDelegate
 
-// -------------------------------------------------------------------------------
-//	scrollViewDidEndDragging:willDecelerate:
-//  Load images for all onscreen rows when scrolling is finished.
-// -------------------------------------------------------------------------------
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (!decelerate)
-    {
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
         [self loadImagesForOnscreenRows];
     }
 }
 
-// -------------------------------------------------------------------------------
-//	scrollViewDidEndDecelerating:scrollView
-//  When scrolling stops, proceed to load the app icons that are on screen.
-// -------------------------------------------------------------------------------
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self loadImagesForOnscreenRows];
 }
-
-
-
 
 #pragma mark - downloadProgressDelegate
 

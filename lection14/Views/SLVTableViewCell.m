@@ -9,6 +9,12 @@
 #import "SLVTableViewCell.h"
 #import "Masonry/Masonry.h"
 
+@interface SLVTableViewCell()
+
+@property (assign, nonatomic, readwrite) CGSize imageViewSize;
+
+@end
+
 @implementation SLVTableViewCell
 
 + (BOOL)requiresConstraintBasedLayout {
@@ -35,15 +41,21 @@
 - (void)updateConstraints {
     [self.photoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.contentView.mas_centerX);
-        make.centerY.equalTo(self.contentView.mas_centerY);
+        make.centerY.equalTo(self.contentView.mas_centerY).with.offset(-12);
         make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
-        self.photoImageView.layer.cornerRadius=20;
+        self.photoImageView.layer.cornerRadius = 20;
         self.photoImageView.layer.masksToBounds = YES;
     }];
     [self.activityIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.photoImageView.mas_centerX);
         make.centerY.equalTo(self.photoImageView.mas_centerY);
     }];
+    CGSize frame = self.contentView.frame.size;
+    if (frame.width < frame.height) {
+        self.imageViewSize = CGSizeMake(frame.width -8, frame.width -8);
+    } else {
+        self.imageViewSize = CGSizeMake(frame.height -8, frame.height -8);
+    }
     [super updateConstraints];
 }
 

@@ -10,8 +10,9 @@
 
 @interface SLVTableViewCell : UITableViewCell
 
-@property (strong,nonatomic) UILabel *trackName;
-@property (strong,nonatomic) UIImageView *photoImageView;
-@property (strong,nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (strong, nonatomic) UILabel *trackName;
+@property (strong, nonatomic) UIImageView *photoImageView;
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (assign, nonatomic, readonly) CGSize imageViewSize;
 
 @end
