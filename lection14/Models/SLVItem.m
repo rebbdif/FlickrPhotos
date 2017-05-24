@@ -10,7 +10,7 @@
 
 @implementation SLVItem
 
-+ (SLVItem *)itemWithDictionary:(NSDictionary *)dict{
++ (SLVItem *)itemWithDictionary:(NSDictionary *)dict {
     SLVItem *item=[SLVItem new];
     item.title = dict[@"title"];
     NSString *secret = dict[@"secret"];

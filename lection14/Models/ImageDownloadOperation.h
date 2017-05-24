@@ -26,5 +26,6 @@ typedef NS_ENUM(NSInteger, SLVImageStatus) {
 @property (assign, nonatomic, readonly) SLVImageStatus status;
 @property (weak, nonatomic) SLVNetworkManager *networkManager;
 @property (assign, nonatomic) CGSize imageViewSize;
+@property (weak, nonatomic) NSCache *imageCache;
 
 @end

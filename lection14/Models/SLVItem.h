@@ -11,9 +11,8 @@
 
 @interface SLVItem : NSObject
 
-@property (strong,nonatomic) UIImage *photo;
-@property (strong,nonatomic) NSURL *photoURL;
-@property (strong,nonatomic) NSString *title;
+@property (strong, nonatomic) NSURL *photoURL;
+@property (strong, nonatomic) NSString *title;
 
 + (SLVItem * )itemWithDictionary:(NSDictionary *)dict;
 

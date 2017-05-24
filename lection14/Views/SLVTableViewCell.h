@@ -14,5 +14,6 @@
 @property (strong, nonatomic) UIImageView *photoImageView;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (assign, nonatomic, readonly) CGSize imageViewSize;
+@property (strong, nonatomic) UIProgressView *progressView;
 
 @end

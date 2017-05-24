@@ -12,11 +12,11 @@
 
 @interface SLVSearchResultsModel : NSObject
 
-@property (copy,nonatomic) NSArray<SLVItem *> *items;
-@property (strong,nonatomic) NSMutableArray *activeDownloads;
-@property (strong,nonatomic) SLVNetworkManager *networkManager;
+@property (copy, nonatomic) NSArray<SLVItem *> *items;
+@property (strong, nonatomic) SLVNetworkManager *networkManager;
+@property (strong, nonatomic) NSCache *imageCache;
 
 - (void) getItemsForRequest:(NSString *)request withCompletionHandler: (void (^)(void))completionHandler;
-- (void) startIconDownload:(SLVItem *)currentItem forIndexPath:(NSIndexPath *)indexPath;
+- (void) clearModel;
 
 @end

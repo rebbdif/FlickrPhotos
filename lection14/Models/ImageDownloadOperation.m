@@ -11,6 +11,7 @@
 #import "SLVSearchResultsModel.h"
 #import "SLVNetworkManager.h"
 
+
 @interface ImageDownloadOperation()
 
 @property (assign,nonatomic,readwrite) SLVImageStatus status;
@@ -31,6 +32,7 @@
 }
 
 - (void)main {
+    NSLog(@"started operations for row: %ld", (long)self.indexPath.row);
     __block UIImage *downloadedImage;
     dispatch_semaphore_t imageDownloadedSemaphore = dispatch_semaphore_create(0);
     NSOperation *downloadOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -38,20 +40,12 @@
         [self.networkManager downloadImageFromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
             downloadedImage = [UIImage imageWithData:data];
             weakself.status = SLVImageStatusDownloaded;
+            NSLog(@"downloadedImage for row: %ld", (long)self.indexPath.row);
             dispatch_semaphore_signal(imageDownloadedSemaphore);
         }];
     }];
-    
     NSOperation *cropOperation = [NSBlockOperation blockOperationWithBlock:^{
-        CGSize itemSize = self.imageViewSize;
-        if (downloadedImage.size.width != itemSize.width  || downloadedImage.size.height != itemSize.height) {
-            UIGraphicsBeginImageContextWithOptions(itemSize, NO, 0.0f);
-            CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-            [downloadedImage drawInRect:imageRect];
-            downloadedImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-        self.item.photo = downloadedImage;
+        //self.item.photo = downloadedImage;
     }];
     [cropOperation addDependency:downloadOperation];
     
@@ -60,6 +54,8 @@
     dispatch_semaphore_wait(imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
     [self.innerQueue addOperation:cropOperation];
     [self.innerQueue waitUntilAllOperationsAreFinished];
+    [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
+    NSLog(@"completed work with image for row: %ld", (long)self.indexPath.row);
 }
 
 @end

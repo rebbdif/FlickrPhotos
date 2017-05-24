@@ -13,7 +13,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _networkManager=[SLVNetworkManager new];
+        _networkManager = [SLVNetworkManager new];
+        _imageCache = [NSCache new];
     }
     return self;
 }
@@ -50,10 +51,9 @@
     }
 }
 
-- (void)startIconDownload:(SLVItem *)currentItem forIndexPath:(NSIndexPath *)indexPath {
-    [self.networkManager downloadImageFromURL:currentItem.photoURL withCompletionHandler:^(NSData *data) {
-        currentItem.photo = [UIImage imageWithData:data];
-    }];
+- (void)clearModel {
+    self.items = [NSArray new];
+    [self.imageCache removeAllObjects];
 }
 
 -(void)dealloc {

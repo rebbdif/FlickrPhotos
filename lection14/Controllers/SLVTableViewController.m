@@ -38,6 +38,7 @@ static  NSString *const reuseID = @"cell";
     self.searchBar=[UISearchBar new];
     self.searchBar.placeholder = @"Введите поисковый запрос";
     self.tableView.tableHeaderView = self.searchBar;
+    self.tableView.allowsSelection = NO;
     self.searchBar.delegate = self;
     [self.searchBar becomeFirstResponder];
     [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
@@ -60,6 +61,8 @@ static  NSString *const reuseID = @"cell";
     self.searchRequest = searchBar.text;
     [searchBar endEditing:YES];
     if (self.searchRequest) {
+        [self.imageOperations removeAllObjects];
+        [self.model clearModel];
         __weak typeof(self) weakself = self;
         [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
             [weakself.tableView reloadData];
@@ -70,50 +73,55 @@ static  NSString *const reuseID = @"cell";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return self.model.items.count == 0 ? 0 : 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.model.items.count ? self.model.items.count : 0;
+    return self.model.items.count == 0 ? 0 : self.model.items.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: reuseID forIndexPath:indexPath];
     SLVItem *currentItem = self.model.items[indexPath.row];
-    if (!currentItem.photo) {
+    if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
         if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
             [self loadImageForIndexPath:indexPath];
         }
         cell.activityIndicator.hidden = NO;
         [cell.activityIndicator startAnimating];
+        cell.progressView.hidden = NO;
+        cell.progressView.progress = 0.5;
     } else {
-        cell.photoImageView.image = currentItem.photo;
+        cell.photoImageView.image = [self.model.imageCache objectForKey:currentItem.photoURL];
     }
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath {
     SLVItem *currentItem = self.model.items[indexPath.row];
-    if (!currentItem.photo) {
+    if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
         if (!self.imageOperations[indexPath]) {
             ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
             imageDownloadOperation.indexPath = indexPath;
             imageDownloadOperation.item = currentItem;
             imageDownloadOperation.networkManager = self.model.networkManager;
+            imageDownloadOperation.imageCache = self.model.imageCache;
             imageDownloadOperation.completionBlock = ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                    cell.photoImageView.image = currentItem.photo;
+                    cell.photoImageView.image = [self.model.imageCache objectForKey: currentItem.photoURL];
                     [cell.activityIndicator stopAnimating];
+                    cell.progressView.hidden = YES;
                 });
             };
             [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
             [self.imagesQueue addOperation:imageDownloadOperation];
         }
+    } else {
+        SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        cell.photoImageView.image = [self.model.imageCache objectForKey:currentItem.photoURL];
+        [cell.activityIndicator stopAnimating];
+        cell.progressView.hidden = YES;
     }
 }
 
@@ -125,7 +133,6 @@ static  NSString *const reuseID = @"cell";
         }
     }
 }
-
 
 #pragma mark - UIScrollViewDelegate
 
@@ -143,13 +150,6 @@ static  NSString *const reuseID = @"cell";
 
 - (void)updateProgress {
     
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    for (SLVItem *item in self.model.items) {
-        item.photo = nil;
-    }
 }
 
 @end
