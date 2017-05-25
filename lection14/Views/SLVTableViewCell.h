@@ -10,7 +10,7 @@
 
 @protocol CellDelegate <NSObject>
 
-- (void) didClickButtonAtIndex;
+- (void)didClickSwitch:(UISwitch *)switcher atIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

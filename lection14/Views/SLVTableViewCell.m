@@ -32,11 +32,12 @@
         _progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
         
         _photoImageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
-       // [_photoImageView setContentMode:UIViewContentModeScaleAspectFill];
-
+        // [_photoImageView setContentMode:UIViewContentModeScaleAspectFill];
+        
         _applyFilterLabel = [UILabel new];
         _applyFilterLabel.text = @"Применить фильтры";
         _applyFilterSwitch = [UISwitch new];
+        [_applyFilterSwitch addTarget:self action:@selector(applyFilterSwitherValueChanged:) forControlEvents:UIControlEventValueChanged];
         
         [self.contentView addSubview:_photoImageView];
         [self.contentView addSubview:_activityIndicator];
@@ -86,5 +87,9 @@
     self.progressView.hidden = YES;
 }
 
+- (IBAction)applyFilterSwitherValueChanged:(id)sender {
+    
+   [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
+}
 
 @end

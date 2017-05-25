@@ -46,12 +46,14 @@ static  NSString *const reuseID = @"cell";
     
     [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
     self.tableView.rowHeight = 368;
+    
     ///
     [self.searchBar endEditing:YES];
     __weak typeof(self) weakself = self;
     [self.model getItemsForRequest:@"tree" withCompletionHandler:^{
         [weakself.tableView reloadData];
     }];
+    ///
 }
 
 #pragma mark - Search Bar Delegate
@@ -81,10 +83,10 @@ static  NSString *const reuseID = @"cell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: reuseID forIndexPath:indexPath];
+    cell.delegate = self;
     SLVItem *currentItem = self.model.items[indexPath.row];
+    cell.indexPath = indexPath;
     [cell.applyFilterSwitch setOn:currentItem.applyFilterSwitherValue];
-    [cell.applyFilterSwitch addTarget:self action:@selector(applyFilterSwitherValueChanged:) forControlEvents:UIControlEventValueChanged];
-    cell.applyFilterSwitch.tag = indexPath.row;
     if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
         if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
             [self loadImageForIndexPath:indexPath];
@@ -163,9 +165,10 @@ static  NSString *const reuseID = @"cell";
     
 }
 
-- (IBAction)applyFilterSwitherValueChanged:(UISwitch *)sender {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
-    if (sender.on) {
+#pragma mark - CellDelegate
+
+- (void)didClickSwitch:(UISwitch *)switcher atIndexPath:(NSIndexPath *)indexPath {
+    if (switcher.on) {
         self.model.items[indexPath.row].applyFilterSwitherValue = YES;
         NSLog(@"state changed for indexpath %lu",indexPath.row);
     } else {
