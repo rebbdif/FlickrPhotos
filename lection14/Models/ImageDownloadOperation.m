@@ -16,6 +16,7 @@
 @interface ImageDownloadOperation()
 
 @property (strong, nonatomic) NSOperationQueue *innerQueue;
+@property (weak, nonatomic) NSURLSessionDataTask *task;
 
 @end
 
@@ -38,7 +39,7 @@
     
     NSOperation *downloadOperation = [NSBlockOperation blockOperationWithBlock:^{
         __weak typeof(self) weakself = self;
-        [self.networkManager downloadImageFromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
+        self.task = [self.networkManager downloadImageFromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
             downloadedImage = [UIImage imageWithData:data];
             weakself.status = SLVImageStatusDownloaded;
             NSLog(@"downloadedImage for row: %ld", (long)self.indexPath.row);
@@ -70,7 +71,7 @@
     [self.innerQueue addOperations:@[applyFilter] waitUntilFinished:YES];
     self.status = SLVImageStatusFiltered;
     if (downloadedImage) {
-    [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
+        [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
     } else {
         self.status = SLVImageStatusNone;
     }
@@ -79,6 +80,7 @@
 
 - (void)ifCancelled {
     if (self.cancelled) {
+        [self.task cancel];
         self.innerQueue.suspended = YES;
         NSLog(@"operation %ld cancelled", (long)self.indexPath.row);
         return;
@@ -87,6 +89,8 @@
 
 - (void)resume {
     self.innerQueue.suspended = NO;
+    [self.task resume];
+
     NSLog(@"operation %ld resumed", (long)self.indexPath.row);
 }
 

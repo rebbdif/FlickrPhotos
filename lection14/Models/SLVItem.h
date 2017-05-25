@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) NSURL *photoURL;
 @property (strong, nonatomic) NSString *title;
+@property (assign, nonatomic) BOOL applyFilterSwitherValue;
 
 + (SLVItem * )itemWithDictionary:(NSDictionary *)dict;
 

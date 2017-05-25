@@ -83,6 +83,7 @@ static  NSString *const reuseID = @"cell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: reuseID forIndexPath:indexPath];
     SLVItem *currentItem = self.model.items[indexPath.row];
+    [cell.applyFilterSwitch setOn:currentItem.applyFilterSwitherValue];
     [cell.applyFilterSwitch addTarget:self action:@selector(applyFilterSwitherValueChanged:) forControlEvents:UIControlEventValueChanged];
     cell.applyFilterSwitch.tag = indexPath.row;
     if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
@@ -166,8 +167,10 @@ static  NSString *const reuseID = @"cell";
 - (IBAction)applyFilterSwitherValueChanged:(UISwitch *)sender {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
     if (sender.on) {
+        self.model.items[indexPath.row].applyFilterSwitherValue = YES;
         NSLog(@"state changed for indexpath %lu",indexPath.row);
     } else {
+        self.model.items[indexPath.row].applyFilterSwitherValue = NO;
         NSLog(@"state changed for indexpath %lu",indexPath.row);
     }
 }

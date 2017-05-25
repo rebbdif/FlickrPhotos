@@ -35,7 +35,7 @@
     [task resume];
 }
 
-- (void)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
+- (NSURLSessionDataTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
     NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             NSLog(@"error when loading images %@",error.userInfo);
@@ -44,6 +44,7 @@
     }];
     task.priority=NSURLSessionTaskPriorityHigh;
     [task resume];
+    return task;
 }
 
 

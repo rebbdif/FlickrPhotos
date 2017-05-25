@@ -17,5 +17,4 @@
 @property (strong, nonatomic) UISwitch *applyFilterSwitch;
 @property (strong, nonatomic) UILabel *applyFilterLabel;
 
-
 @end

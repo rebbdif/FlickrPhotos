@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @protocol NetworkManagerDownloadDelegate <NSObject>
+
 @optional
+
 - (void)updateProgress;
 - (void)downloadedImageData;
 
@@ -21,6 +23,6 @@
 @property (weak,nonatomic) id downloadProgressDelegate;
 
 - (void)getModelFromURL:(NSURL *) url withCompletionHandler:(void (^)(NSData * data))completionHandler;
-- (void)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
+- (NSURLSessionDataTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
 
 @end
