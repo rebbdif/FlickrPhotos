@@ -13,7 +13,7 @@
 #import "SLVTableViewCell.h"
 #import "ImageDownloadOperation.h"
 
-@interface SLVTableViewController () <UISearchBarDelegate, NetworkManagerDownloadDelegate>
+@interface SLVTableViewController () <UISearchBarDelegate, CellDelegate, NetworkManagerDownloadDelegate>
 
 @property (strong,nonatomic) SLVSearchResultsModel *model;
 @property (strong,nonatomic) UISearchBar *searchBar;
@@ -52,7 +52,6 @@ static  NSString *const reuseID = @"cell";
     [self.model getItemsForRequest:@"tree" withCompletionHandler:^{
         [weakself.tableView reloadData];
     }];
-    
 }
 
 #pragma mark - Search Bar Delegate

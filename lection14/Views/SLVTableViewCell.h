@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol CellDelegate <NSObject>
+
+- (void) didClickButtonAtIndex;
+
+@end
+
 @interface SLVTableViewCell : UITableViewCell
 
 @property (strong, nonatomic) UIImageView *photoImageView;
@@ -16,5 +22,8 @@
 @property (strong, nonatomic) UIProgressView *progressView;
 @property (strong, nonatomic) UISwitch *applyFilterSwitch;
 @property (strong, nonatomic) UILabel *applyFilterLabel;
+
+@property (strong, nonatomic) NSIndexPath *indexPath;
+@property (weak, nonatomic) id<CellDelegate> delegate;
 
 @end

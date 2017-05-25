@@ -15,6 +15,7 @@
 @property (strong, nonatomic) NSString *title;
 @property (assign, nonatomic) BOOL applyFilterSwitherValue;
 
+
 + (SLVItem * )itemWithDictionary:(NSDictionary *)dict;
 
 @end
