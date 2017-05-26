@@ -39,8 +39,9 @@
     NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             NSLog(@"error when loading images %@",error.userInfo);
-        }
+        } else {
         completionHandler(data);
+        }
     }];
     task.priority=NSURLSessionTaskPriorityHigh;
     [task resume];

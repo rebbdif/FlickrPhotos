@@ -19,6 +19,7 @@
 		6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */; };
 		6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */; };
 		63ABAB831ED60E8900941726 /* SLVImageProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB821ED60E8900941726 /* SLVImageProcessing.m */; };
+		63ABAB861ED843DB00941726 /* SLVFilterOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB851ED843DB00941726 /* SLVFilterOperation.m */; };
 		63ACEF3E1EBD3F53007C0D41 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,8 @@
 		6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageDownloadOperation.m; path = Models/ImageDownloadOperation.m; sourceTree = "<group>"; };
 		63ABAB811ED60E8900941726 /* SLVImageProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVImageProcessing.h; path = Services/SLVImageProcessing.h; sourceTree = "<group>"; };
 		63ABAB821ED60E8900941726 /* SLVImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageProcessing.m; path = Services/SLVImageProcessing.m; sourceTree = "<group>"; };
+		63ABAB841ED843DB00941726 /* SLVFilterOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVFilterOperation.h; path = Models/SLVFilterOperation.h; sourceTree = "<group>"; };
+		63ABAB851ED843DB00941726 /* SLVFilterOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVFilterOperation.m; path = Models/SLVFilterOperation.m; sourceTree = "<group>"; };
 		63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,6 +134,8 @@
 			children = (
 				6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */,
 				6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */,
+				63ABAB841ED843DB00941726 /* SLVFilterOperation.h */,
+				63ABAB851ED843DB00941726 /* SLVFilterOperation.m */,
 				6350EF871ED5843000D7C8CE /* SLVItem.h */,
 				6350EF881ED5843000D7C8CE /* SLVItem.m */,
 				6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */,
@@ -316,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */,
+				63ABAB861ED843DB00941726 /* SLVFilterOperation.m in Sources */,
 				04E2FFA81EBB90A50074C5D9 /* lection14.xcdatamodeld in Sources */,
 				6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */,
 				04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */,

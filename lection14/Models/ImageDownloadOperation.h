@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, SLVImageStatus) {
 @property (assign, nonatomic) CGSize imageViewSize;
 @property (weak, nonatomic) NSCache *imageCache;
 
+- (void)pause;
 - (void)resume;
 
 @end

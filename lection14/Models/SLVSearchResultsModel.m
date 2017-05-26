@@ -8,6 +8,13 @@
 
 #import "SLVSearchResultsModel.h"
 
+@interface SLVSearchResultsModel()
+
+@property (assign, nonatomic) NSUInteger page;
+
+@end
+
+
 @implementation SLVSearchResultsModel
 
 - (instancetype)init {
@@ -15,6 +22,8 @@
     if (self) {
         _networkManager = [SLVNetworkManager new];
         _imageCache = [NSCache new];
+        _page = 1;
+        _items = [NSArray new];
     }
     return self;
 }
@@ -23,14 +32,16 @@
     NSString *normalizedRequest=[request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
-    NSString *urls =[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&text=%@%@",escapedString,apiKey];
+    NSString *urls =[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu",escapedString,apiKey,self.page];
     NSURL *url =[NSURL URLWithString:urls];
     [self.networkManager getModelFromURL:url withCompletionHandler:^(NSData *data) {
-        self.items=[self parseData:data];
+        NSArray *newItems = [self parseData:data];
+        self.items= [self.items arrayByAddingObjectsFromArray:newItems];
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler();
         });
     }];
+    self.page++;
 }
 
 - (NSArray *)parseData:(NSData *)data {
@@ -54,6 +65,7 @@
 - (void)clearModel {
     self.items = [NSArray new];
     [self.imageCache removeAllObjects];
+    self.page = 0;
 }
 
 -(void)dealloc {

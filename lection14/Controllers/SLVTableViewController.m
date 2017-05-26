@@ -50,7 +50,8 @@ static  NSString *const reuseID = @"cell";
     ///
     [self.searchBar endEditing:YES];
     __weak typeof(self) weakself = self;
-    [self.model getItemsForRequest:@"tree" withCompletionHandler:^{
+    self.searchRequest = @"street art";
+    [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
         [weakself.tableView reloadData];
     }];
     ///
@@ -79,6 +80,15 @@ static  NSString *const reuseID = @"cell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.model.items.count == 0 ? 0 : self.model.items.count;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ((indexPath.row + 3) % 10 == 0) {
+        __weak typeof(self) weakself = self;
+        [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
+            [weakself.tableView reloadData];
+        }];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -121,7 +131,9 @@ static  NSString *const reuseID = @"cell";
             [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
             [self.imagesQueue addOperation:imageDownloadOperation];
         } else {
-            [self.imageOperations[indexPath] resume];
+            if (self.imageOperations[indexPath].status == SLVImageStatusCancelled || self.imageOperations[indexPath].status == SLVImageStatusNone) {
+                [self.imageOperations[indexPath] resume];
+            }
         }
     } else {
         SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -155,7 +167,9 @@ static  NSString *const reuseID = @"cell";
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.imageOperations enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id key, id object, BOOL *stop) {
         ImageDownloadOperation *operation = (ImageDownloadOperation *)object;
-        [operation cancel];
+        if (operation.isExecuting) {
+        [operation pause];
+        }
     }];
 }
 
@@ -170,6 +184,7 @@ static  NSString *const reuseID = @"cell";
 - (void)didClickSwitch:(UISwitch *)switcher atIndexPath:(NSIndexPath *)indexPath {
     if (switcher.on) {
         self.model.items[indexPath.row].applyFilterSwitherValue = YES;
+        //  [[self.imageOperations objectForKey:indexPath] applyFilter];
         NSLog(@"state changed for indexpath %lu",indexPath.row);
     } else {
         self.model.items[indexPath.row].applyFilterSwitherValue = NO;

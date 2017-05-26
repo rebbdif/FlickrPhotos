@@ -16,7 +16,10 @@
 @interface ImageDownloadOperation()
 
 @property (strong, nonatomic) NSOperationQueue *innerQueue;
-@property (weak, nonatomic) NSURLSessionDataTask *task;
+@property (strong, nonatomic) NSURLSessionTask *task;
+@property (strong, nonatomic) NSOperation *downloadOperation;
+@property (strong, nonatomic) NSOperation *cropOperation;
+@property (strong, nonatomic) NSOperation *applyFilterOperation;
 
 @end
 
@@ -33,65 +36,71 @@
 }
 
 - (void)main {
-    NSLog(@"started operations for row: %ld", (long)self.indexPath.row);
     __block UIImage *downloadedImage;
     dispatch_semaphore_t imageDownloadedSemaphore = dispatch_semaphore_create(0);
     
-    NSOperation *downloadOperation = [NSBlockOperation blockOperationWithBlock:^{
+    self.downloadOperation = [NSBlockOperation blockOperationWithBlock:^{
         __weak typeof(self) weakself = self;
         self.task = [self.networkManager downloadImageFromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
             downloadedImage = [UIImage imageWithData:data];
             weakself.status = SLVImageStatusDownloaded;
-            NSLog(@"downloadedImage for row: %ld", (long)self.indexPath.row);
             dispatch_semaphore_signal(imageDownloadedSemaphore);
         }];
     }];
     
-    NSOperation *cropOperation = [NSBlockOperation blockOperationWithBlock:^{
+    self.cropOperation = [NSBlockOperation blockOperationWithBlock:^{
         downloadedImage = [SLVImageProcessing cropImage:downloadedImage toSize:self.imageViewSize];
     }];
-    [cropOperation addDependency:downloadOperation];
+    [self.cropOperation addDependency:self.downloadOperation];
     
-    NSOperation *applyFilter = [NSBlockOperation blockOperationWithBlock:^{
+    self.applyFilterOperation = [NSBlockOperation blockOperationWithBlock:^{
         downloadedImage = [SLVImageProcessing applyFilterToImage:downloadedImage];
     }];
-    [applyFilter addDependency:cropOperation];
-    
-    [self ifCancelled];
-    
+    [self.applyFilterOperation addDependency:self.cropOperation];
+        
     self.status = SLVImageStatusDownloading;
-    [self.innerQueue addOperation:downloadOperation];
+    [self.innerQueue addOperation:self.downloadOperation];
     dispatch_semaphore_wait(imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
     
-    [self.innerQueue addOperations:@[cropOperation] waitUntilFinished:YES];
+    [self.innerQueue addOperations:@[self.cropOperation] waitUntilFinished:YES];
     self.status = SLVImageStatusCropped;
     
-    [self ifCancelled];
-    
-    [self.innerQueue addOperations:@[applyFilter] waitUntilFinished:YES];
-    self.status = SLVImageStatusFiltered;
     if (downloadedImage) {
         [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
     } else {
         self.status = SLVImageStatusNone;
     }
-    NSLog(@"completed work with image for row: %ld", (long)self.indexPath.row);
-}
-
-- (void)ifCancelled {
-    if (self.cancelled) {
-        [self.task cancel];
-        self.innerQueue.suspended = YES;
-        NSLog(@"operation %ld cancelled", (long)self.indexPath.row);
+    
+    if (self.item.applyFilterSwitherValue == NO) {
         return;
+    } else {
+        [self applyFilter];
+    }
+    
+    if (downloadedImage) {
+        [self.imageCache setObject:downloadedImage forKey:self.item.photoURL];
+    } else {
+        self.status = SLVImageStatusNone;
     }
 }
 
 - (void)resume {
     self.innerQueue.suspended = NO;
     [self.task resume];
-
     NSLog(@"operation %ld resumed", (long)self.indexPath.row);
+}
+
+- (void)applyFilter {
+    [self.innerQueue addOperations:@[self.applyFilterOperation] waitUntilFinished:YES];
+    self.status = SLVImageStatusFiltered;
+}
+
+- (void)pause {
+    NSLog(@"operation %ld paused", (long)self.indexPath.row);
+    self.innerQueue.suspended = YES;
+    self.status = SLVImageStatusCancelled;
+    [self.task suspend];
+    [self cancel];
 }
 
 @end
