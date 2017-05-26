@@ -7,6 +7,7 @@
 //
 
 #import "SLVItem.h"
+#
 
 @implementation SLVItem
 
@@ -19,7 +20,7 @@
     NSString *idd = dict[@"id"];
     
     NSString *url = [NSString stringWithFormat:@"https://farm%@.staticflickr.com/%@/%@_%@_h.jpg", farm, server, idd, secret];
-
+   // NSString *url = [NSString stringWithFormat:@"https://farm%@.staticflickr.com/%@/%@_%@_q.jpg", farm, server, idd, secret];
     item.photoURL = [NSURL URLWithString:url];
     
     item.applyFilterSwitherValue = NO;

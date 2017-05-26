@@ -20,6 +20,7 @@
 		6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */; };
 		63ABAB831ED60E8900941726 /* SLVImageProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB821ED60E8900941726 /* SLVImageProcessing.m */; };
 		63ABAB861ED843DB00941726 /* SLVFilterOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB851ED843DB00941726 /* SLVFilterOperation.m */; };
+		63ABAB881ED873CC00941726 /* SLVImageDownloadOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */; };
 		63ACEF3E1EBD3F53007C0D41 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		63ABAB821ED60E8900941726 /* SLVImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageProcessing.m; path = Services/SLVImageProcessing.m; sourceTree = "<group>"; };
 		63ABAB841ED843DB00941726 /* SLVFilterOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVFilterOperation.h; path = Models/SLVFilterOperation.h; sourceTree = "<group>"; };
 		63ABAB851ED843DB00941726 /* SLVFilterOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVFilterOperation.m; path = Models/SLVFilterOperation.m; sourceTree = "<group>"; };
+		63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageDownloadOperationTests.m; path = lection14Tests/SLVImageDownloadOperationTests.m; sourceTree = "<group>"; };
 		63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,6 +88,7 @@
 			children = (
 				04E2FF991EBB90A50074C5D9 /* lection14 */,
 				04E2FF981EBB90A50074C5D9 /* Products */,
+				63ABAB891ED873D500941726 /* UnitTests */,
 				63ACEF3B1EBD3B36007C0D41 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -162,6 +165,14 @@
 				6350EF7F1ED583FB00D7C8CE /* SLVTableViewCell.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		63ABAB891ED873D500941726 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */,
+			);
+			name = UnitTests;
 			sourceTree = "<group>";
 		};
 		63ACEF371EBC951A007C0D41 /* Application */ = {
@@ -338,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63ABAB881ED873CC00941726 /* SLVImageDownloadOperationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,8 @@
 #import "SLVTableViewController.h"
 #import "SLVTableViewCell.h"
 #import "ImageDownloadOperation.h"
+#import "SLVFilterOperation.h"
+#import "SLVImageProcessing.h"
 
 @interface SLVTableViewController () <UISearchBarDelegate, CellDelegate, NetworkManagerDownloadDelegate>
 
@@ -168,7 +170,7 @@ static  NSString *const reuseID = @"cell";
     [self.imageOperations enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id key, id object, BOOL *stop) {
         ImageDownloadOperation *operation = (ImageDownloadOperation *)object;
         if (operation.isExecuting) {
-        [operation pause];
+            [operation pause];
         }
     }];
 }
@@ -183,8 +185,17 @@ static  NSString *const reuseID = @"cell";
 
 - (void)didClickSwitch:(UISwitch *)switcher atIndexPath:(NSIndexPath *)indexPath {
     if (switcher.on) {
-        self.model.items[indexPath.row].applyFilterSwitherValue = YES;
-        //  [[self.imageOperations objectForKey:indexPath] applyFilter];
+        SLVItem *currentItem = self.model.items[indexPath.row];
+        currentItem.applyFilterSwitherValue = YES;
+        NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:[self.model.imageCache objectForKey:currentItem.photoURL]];
+                SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                cell.photoImageView.image = filteredImage;
+            });
+        }];
+        [filterOperation addDependency:[self.imageOperations objectForKey:indexPath]];
+        [self.imagesQueue addOperation:filterOperation];
         NSLog(@"state changed for indexpath %lu",indexPath.row);
     } else {
         self.model.items[indexPath.row].applyFilterSwitherValue = NO;

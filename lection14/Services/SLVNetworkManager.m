@@ -35,15 +35,13 @@
     [task resume];
 }
 
-- (NSURLSessionDataTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
-    NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"error when loading images %@",error.userInfo);
-        } else {
+- (NSURLSessionDownloadTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
+    NSURLSessionDownloadTask *task = [self.session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSData *data = [NSData dataWithContentsOfURL:location];
+        NSError *fileError = nil;
+        [[NSFileManager defaultManager] removeItemAtURL:location error:&fileError];
         completionHandler(data);
-        }
     }];
-    task.priority=NSURLSessionTaskPriorityHigh;
     [task resume];
     return task;
 }

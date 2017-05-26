@@ -10,4 +10,8 @@
 
 @implementation SLVFilterOperation
 
+- (void)main {
+    
+}
+
 @end
