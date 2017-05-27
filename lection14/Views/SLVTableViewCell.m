@@ -49,10 +49,15 @@
 }
 
 - (void)updateConstraints {
+    CGRect frame = self.contentView.frame;
     [self.photoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.contentView.mas_centerX);
         make.centerY.equalTo(self.contentView.mas_centerY).with.offset(-12);
-        make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
+        if (CGRectGetWidth(frame) > CGRectGetHeight(frame)) {
+            make.size.mas_equalTo(self.contentView.mas_height).sizeOffset(CGSizeMake(-8, -8));
+        } else {
+            make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
+        }
         self.photoImageView.layer.cornerRadius = 20;
         self.photoImageView.layer.masksToBounds = YES;
     }];
@@ -89,7 +94,7 @@
 
 - (IBAction)applyFilterSwitherValueChanged:(id)sender {
     
-   [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
+    [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
 }
 
 @end
