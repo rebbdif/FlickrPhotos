@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "SLVTableViewController.h"
+#import "SLVSearchResultsModel.h"
 
 @interface AppDelegate ()
 
@@ -18,7 +19,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window=[[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
-    SLVTableViewController *tableVC=[SLVTableViewController new];
+    SLVSearchResultsModel *model = [SLVSearchResultsModel new];
+    SLVTableViewController *tableVC=[[SLVTableViewController alloc]initWithModel:model];
     self.window.rootViewController=tableVC;
     [self.window makeKeyAndVisible];
     return YES;

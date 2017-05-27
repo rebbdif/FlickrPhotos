@@ -7,19 +7,28 @@
 //
 
 #import "SLVSearchResultsModel.h"
+#import "ImageDownloadOperation.h"
+#import "SLVImageProcessing.h"
+#import "SLVNetworkManager.h"
+#import "SLVTableViewController.h"
 
 @interface SLVSearchResultsModel()
 
 @property (assign, nonatomic) NSUInteger page;
+@property (strong, nonatomic) NSMutableDictionary<NSIndexPath *, ImageDownloadOperation *> *imageOperations;
+@property (strong, nonatomic) NSOperationQueue *imagesQueue;
+@property (strong, nonatomic) SLVNetworkManager *networkManager;
 
 @end
-
 
 @implementation SLVSearchResultsModel
 
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _imageOperations = [NSMutableDictionary new];
+        _imagesQueue = [NSOperationQueue new];
+        _imagesQueue.qualityOfService = QOS_CLASS_DEFAULT;
         _networkManager = [SLVNetworkManager new];
         _imageCache = [NSCache new];
         _page = 1;
@@ -29,14 +38,14 @@
 }
 
 - (void)getItemsForRequest:(NSString*) request withCompletionHandler:(void (^)(void))completionHandler {
-    NSString *normalizedRequest=[request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    NSString *normalizedRequest = [request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
-    NSString *urls =[NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu",escapedString,apiKey,self.page];
-    NSURL *url =[NSURL URLWithString:urls];
+    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu",escapedString,apiKey,self.page];
+    NSURL *url = [NSURL URLWithString:urls];
     [self.networkManager getModelFromURL:url withCompletionHandler:^(NSData *data) {
         NSArray *newItems = [self parseData:data];
-        self.items= [self.items arrayByAddingObjectsFromArray:newItems];
+        self.items = [self.items arrayByAddingObjectsFromArray:newItems];
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler();
         });
@@ -49,12 +58,11 @@
         return nil;
     } else {
         NSError *error=nil;
-        NSDictionary* json=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-        if(error) {
+        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+        if (error) {
             NSLog(@"ERROR PARSING JSON %@",error.userInfo);
         }
-        
-        NSMutableArray *parsingResults =[NSMutableArray new];
+        NSMutableArray *parsingResults = [NSMutableArray new];
         for (NSDictionary * dict in json[@"photos"][@"photo"]) {
             [parsingResults addObject:[SLVItem itemWithDictionary:dict]];
         }
@@ -62,14 +70,66 @@
     }
 }
 
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(void(^)(void))completionHandler {
+    SLVItem *currentItem = self.items[indexPath.row];
+    if (![self.imageCache objectForKey:currentItem.photoURL]) {
+        if (!self.imageOperations[indexPath]) {
+            ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
+            imageDownloadOperation.indexPath = indexPath;
+            imageDownloadOperation.item = currentItem;
+            imageDownloadOperation.networkManager = self.networkManager;
+            imageDownloadOperation.imageCache = self.imageCache;
+            imageDownloadOperation.completionBlock = ^{
+                completionHandler();
+            };
+            [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
+            [self.imagesQueue addOperation:imageDownloadOperation];
+        } else {
+            if (self.imageOperations[indexPath].status == SLVImageStatusCancelled || self.imageOperations[indexPath].status == SLVImageStatusNone) {
+                [self.imageOperations[indexPath] resume];
+            }
+        }
+    } else {
+        completionHandler();
+    }
+}
+
+- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image)) completion {
+    if (filter == YES) {
+        SLVItem *currentItem = self.items[indexPath.row];
+        currentItem.applyFilterSwitherValue = YES;
+        NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:[self.imageCache objectForKey:indexPath]];
+                completion(filteredImage);
+            });
+        }];
+        [filterOperation addDependency:[self.imageOperations objectForKey:indexPath]];
+        [self.imagesQueue addOperation:filterOperation];
+        NSLog(@"state changed for indexpath %lu",indexPath.row);
+    } else {
+        self.items[indexPath.row].applyFilterSwitherValue = NO;
+        UIImage *originalImage = [self.imageCache objectForKey:indexPath];
+        completion(originalImage);
+        NSLog(@"state changed for indexpath %lu",indexPath.row);
+    }
+}
+
+- (void)cancelOperations {
+    [self.imageOperations enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id key, id object, BOOL *stop) {
+        ImageDownloadOperation *operation = (ImageDownloadOperation *)object;
+        if (operation.isExecuting) {
+            [operation pause];
+        }
+    }];
+}
+
 - (void)clearModel {
     self.items = [NSArray new];
     [self.imageCache removeAllObjects];
     self.page = 0;
+    [self.imageOperations removeAllObjects];
 }
 
--(void)dealloc {
-    _networkManager=nil;
-}
 
 @end

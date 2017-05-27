@@ -9,15 +9,6 @@
 #import <Foundation/Foundation.h>
 @import UIKit;
 
-@protocol NetworkManagerDownloadDelegate <NSObject>
-
-@optional
-
-- (void)updateProgress;
-- (void)downloadedImageData;
-
-@end
-
 @interface SLVNetworkManager : NSObject
 
 @property (strong,nonatomic) NSURLSession *session;

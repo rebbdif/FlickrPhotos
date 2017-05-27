@@ -7,16 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SLVNetworkManager.h"
 #import "SLVItem.h"
+#import "SLVTableViewController.h"
 
-@interface SLVSearchResultsModel : NSObject
+@class ImageDownloadOperation;
+@class SLVNetworkManager;
+
+@interface SLVSearchResultsModel : NSObject <SLVTableVCDelegate>
 
 @property (copy, nonatomic) NSArray<SLVItem *> *items;
-@property (strong, nonatomic) SLVNetworkManager *networkManager;
+@property (strong, nonatomic) NSString *searchRequest;
 @property (strong, nonatomic) NSCache *imageCache;
 
-- (void) getItemsForRequest:(NSString *)request withCompletionHandler: (void (^)(void))completionHandler;
-- (void) clearModel;
+- (void)getItemsForRequest:(NSString *)request withCompletionHandler: (void (^)(void))completionHandler;
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(void(^)(void))completionHandler;
+- (void)cancelOperations;
+- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image)) completion;
+- (void)clearModel;
 
 @end

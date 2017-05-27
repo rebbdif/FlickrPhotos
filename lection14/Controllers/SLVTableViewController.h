@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol  SLVTableVCDelegate<NSObject>
+
+@end
+
 @interface SLVTableViewController : UITableViewController
+
+- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model;
 
 @end

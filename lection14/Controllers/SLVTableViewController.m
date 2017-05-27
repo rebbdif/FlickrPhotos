@@ -11,31 +11,36 @@
 #import "SLVItem.h"
 #import "SLVTableViewController.h"
 #import "SLVTableViewCell.h"
-#import "ImageDownloadOperation.h"
-#import "SLVFilterOperation.h"
-#import "SLVImageProcessing.h"
+#import "SLVTableViewControllerDataProvider.h"
 
-@interface SLVTableViewController () <UISearchBarDelegate, CellDelegate, NetworkManagerDownloadDelegate>
+@interface SLVTableViewController () <UISearchBarDelegate>
 
-@property (strong,nonatomic) SLVSearchResultsModel *model;
-@property (strong,nonatomic) UISearchBar *searchBar;
-@property (strong,nonatomic) NSString *searchRequest;
-@property (strong,nonatomic) NSMutableDictionary<NSIndexPath *, ImageDownloadOperation *>  *imageOperations;
-@property (strong,nonatomic) NSOperationQueue *imagesQueue;
+@property (strong, nonatomic, readwrite) SLVSearchResultsModel *model;
+@property (strong, nonatomic) UISearchBar *searchBar;
+@property (strong, nonatomic) SLVTableViewControllerDataProvider *dataProvider;
 
 @end
 
 @implementation SLVTableViewController
 
-static  NSString *const reuseID = @"cell";
+static NSString *const reuseID = @"cell";
+
+- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model {
+    self = [super init];
+    if (self) {
+        _model = model;
+        _dataProvider = [[SLVTableViewControllerDataProvider alloc]initWithModel:model];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.model = [SLVSearchResultsModel new];
-    self.model.networkManager.downloadProgressDelegate = self;
-    _imageOperations = [NSMutableDictionary new];
-    _imagesQueue = [NSOperationQueue new];
-    _imagesQueue.qualityOfService = QOS_CLASS_DEFAULT;
+    self.dataProvider.tableView = self.tableView;
+    self.tableView.delegate = _dataProvider;
+    self.tableView.dataSource = _dataProvider;
+    ((UIScrollView *)self.tableView).delegate = self;
+    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
     
     self.searchBar=[UISearchBar new];
     self.searchBar.placeholder = @"Введите поисковый запрос";
@@ -46,14 +51,12 @@ static  NSString *const reuseID = @"cell";
     [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
     [self.searchBar sizeToFit];
     
-    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
     self.tableView.rowHeight = 368;
-    
     ///
     [self.searchBar endEditing:YES];
     __weak typeof(self) weakself = self;
-    self.searchRequest = @"street art";
-    [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
+    self.model.searchRequest = @"street art";
+    [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
         [weakself.tableView reloadData];
     }];
     ///
@@ -62,95 +65,14 @@ static  NSString *const reuseID = @"cell";
 #pragma mark - Search Bar Delegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    self.searchRequest = searchBar.text;
+    self.model.searchRequest = searchBar.text;
     [searchBar endEditing:YES];
-    if (self.searchRequest) {
-        [self.imageOperations removeAllObjects];
+    if (self.model.searchRequest) {
         [self.model clearModel];
         __weak typeof(self) weakself = self;
-        [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
+        [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
             [weakself.tableView reloadData];
         }];
-    }
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.model.items.count == 0 ? 0 : 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.model.items.count == 0 ? 0 : self.model.items.count;
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ((indexPath.row + 3) % 10 == 0) {
-        __weak typeof(self) weakself = self;
-        [self.model getItemsForRequest:self.searchRequest withCompletionHandler:^{
-            [weakself.tableView reloadData];
-        }];
-    }
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: reuseID forIndexPath:indexPath];
-    cell.delegate = self;
-    SLVItem *currentItem = self.model.items[indexPath.row];
-    cell.indexPath = indexPath;
-    [cell.applyFilterSwitch setOn:currentItem.applyFilterSwitherValue];
-    if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
-        if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
-            [self loadImageForIndexPath:indexPath];
-        }
-        cell.activityIndicator.hidden = NO;
-        [cell.activityIndicator startAnimating];
-        cell.progressView.hidden = NO;
-        cell.progressView.progress = 0.5;
-    } else {
-        cell.photoImageView.image = [self.model.imageCache objectForKey:currentItem.photoURL];
-    }
-    return cell;
-}
-
-- (void)loadImageForIndexPath:(NSIndexPath *)indexPath {
-    SLVItem *currentItem = self.model.items[indexPath.row];
-    if (![self.model.imageCache objectForKey:currentItem.photoURL]) {
-        if (!self.imageOperations[indexPath]) {
-            ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
-            imageDownloadOperation.indexPath = indexPath;
-            imageDownloadOperation.item = currentItem;
-            imageDownloadOperation.networkManager = self.model.networkManager;
-            imageDownloadOperation.imageCache = self.model.imageCache;
-            imageDownloadOperation.completionBlock = ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                    cell.photoImageView.image = [self.model.imageCache objectForKey: currentItem.photoURL];
-                    [cell.activityIndicator stopAnimating];
-                    cell.progressView.hidden = YES;
-                });
-            };
-            [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
-            [self.imagesQueue addOperation:imageDownloadOperation];
-        } else {
-            if (self.imageOperations[indexPath].status == SLVImageStatusCancelled || self.imageOperations[indexPath].status == SLVImageStatusNone) {
-                [self.imageOperations[indexPath] resume];
-            }
-        }
-    } else {
-        SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        cell.photoImageView.image = [self.model.imageCache objectForKey:currentItem.photoURL];
-        [cell.activityIndicator stopAnimating];
-        cell.progressView.hidden = YES;
-    }
-}
-
-- (void)loadImagesForOnscreenRows {
-    if (self.model.items.count > 0) {
-        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
-        for (NSIndexPath *indexPath in visiblePaths) {
-            [self loadImageForIndexPath:indexPath];
-        }
     }
 }
 
@@ -167,39 +89,35 @@ static  NSString *const reuseID = @"cell";
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.imageOperations enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id key, id object, BOOL *stop) {
-        ImageDownloadOperation *operation = (ImageDownloadOperation *)object;
-        if (operation.isExecuting) {
-            [operation pause];
-        }
-    }];
+    [self.model cancelOperations];
 }
 
-#pragma mark - downloadProgressDelegate
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row + 5 == self.model.items.count) {
+        __weak typeof(self) weakself = self;
+        [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
+            [weakself.tableView reloadData];
+        }];
+    }
+}
 
-- (void)updateProgress {
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-#pragma mark - CellDelegate
-
-- (void)didClickSwitch:(UISwitch *)switcher atIndexPath:(NSIndexPath *)indexPath {
-    if (switcher.on) {
-        SLVItem *currentItem = self.model.items[indexPath.row];
-        currentItem.applyFilterSwitherValue = YES;
-        NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:[self.model.imageCache objectForKey:currentItem.photoURL]];
-                SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                cell.photoImageView.image = filteredImage;
-            });
-        }];
-        [filterOperation addDependency:[self.imageOperations objectForKey:indexPath]];
-        [self.imagesQueue addOperation:filterOperation];
-        NSLog(@"state changed for indexpath %lu",indexPath.row);
-    } else {
-        self.model.items[indexPath.row].applyFilterSwitherValue = NO;
-        NSLog(@"state changed for indexpath %lu",indexPath.row);
+- (void)loadImagesForOnscreenRows {
+    if (self.model.items.count > 0) {
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths) {
+            [self.model loadImageForIndexPath:indexPath withCompletionHandler:^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                    cell.photoImageView.image = [self.model.imageCache objectForKey:indexPath];
+                    [cell.activityIndicator stopAnimating];
+                    cell.progressView.hidden = YES;
+                });
+            }];
+        }
     }
 }
 

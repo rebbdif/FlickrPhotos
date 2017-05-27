@@ -16,6 +16,6 @@
 @property (assign, nonatomic) BOOL applyFilterSwitherValue;
 @property (assign, nonatomic) float downloadProgress;
 
-+ (SLVItem * )itemWithDictionary:(NSDictionary *)dict;
++ (SLVItem *)itemWithDictionary:(NSDictionary *)dict;
 
 @end

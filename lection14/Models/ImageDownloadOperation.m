@@ -70,7 +70,7 @@
     NSLog(@"operation %ld cropped", (long)self.indexPath.row);
     
     if (self.downloadedImage) {
-        [self.imageCache setObject:self.downloadedImage forKey:self.item.photoURL];
+        [self.imageCache setObject:self.downloadedImage forKey:self.indexPath];
     } else {
         self.status = SLVImageStatusNone;
     }
