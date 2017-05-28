@@ -58,7 +58,7 @@ static NSString *const reuseID = @"cell";
         cell.activityIndicator.hidden = NO;
         [cell.activityIndicator startAnimating];
         cell.progressView.hidden = NO;
-        cell.progressView.progress = 0.5;
+        cell.progressView.progress = currentItem.downloadProgress;
     } else {
         cell.photoImageView.image = [self.model.imageCache objectForKey:indexPath];
         if (currentItem.applyFilterSwitherValue == YES) {

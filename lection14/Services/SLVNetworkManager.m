@@ -8,26 +8,26 @@
 
 #import "SLVNetworkManager.h"
 
-@interface SLVNetworkManager() <NSURLSessionDataDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate>
-
-@end
-
 @implementation SLVNetworkManager
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        NSOperationQueue *downloadQueue = [NSOperationQueue new];
-        downloadQueue.name = @"downloadQueue";
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:downloadQueue];
     }
     return self;
 }
 
-- (void)getModelFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData * data))completionHandler {
-    NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        completionHandler(data);
-        if (error) {
++ (void)getModelWithSession:(NSURLSession *)session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSDictionary *json))completionHandler {
+    NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (data) {
+            NSError *jsonError=nil;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonError];
+            if (!jsonError) {
+                completionHandler(json);
+            } else {
+                NSLog(@"ERROR PARSING JSON %@",error.userInfo);
+            }
+        } else if (error) {
             NSLog(@"error while downloading data %@",error.userInfo);
         }
     }];
@@ -35,8 +35,8 @@
     [task resume];
 }
 
-- (NSURLSessionDownloadTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
-    NSURLSessionDownloadTask *task = [self.session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
++ (NSURLSessionTask *)downloadImageWithSession:(NSURLSession *)session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler {
+    NSURLSessionDownloadTask *task = [session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSData *data = [NSData dataWithContentsOfURL:location];
         NSError *fileError = nil;
         [[NSFileManager defaultManager] removeItemAtURL:location error:&fileError];
