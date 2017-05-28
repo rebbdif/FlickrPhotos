@@ -16,7 +16,6 @@
     [filter setValue:originCI forKey:kCIInputImageKey];
     CIImage *resultCI = filter.outputImage;
     UIImage *result = [UIImage imageWithCIImage:resultCI];
-    
     return result;
 }
 

@@ -66,7 +66,7 @@
         make.centerY.equalTo(self.photoImageView.mas_centerY);
     }];
     [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top);
+        make.centerY.equalTo(self.contentView.mas_top).with.offset(4);
         make.left.equalTo(self.contentView.mas_left).with.offset(8);
         make.right.equalTo(self.contentView.mas_right).with.offset(-8);
     }];
@@ -90,6 +90,7 @@
     [self.activityIndicator stopAnimating];
     self.activityIndicator.hidden = YES;
     self.progressView.hidden = YES;
+    self.progressView.progress = 0;
 }
 
 - (IBAction)applyFilterSwitherValueChanged:(id)sender {
