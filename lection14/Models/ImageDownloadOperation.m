@@ -65,15 +65,14 @@
     [self.innerQueue addOperation:self.downloadOperation];
     
     __weak typeof(self) weakself = self;
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, nil);
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(timer, ^{
         float received = weakself.task.countOfBytesReceived;
         float expected = weakself.task.countOfBytesExpectedToReceive;
         if (expected!=0) {
-            [notificationCenter postNotificationName:@"updateProgressNotification" object:self.indexPath];
             weakself.item.downloadProgress = received/expected;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification" object:self.indexPath];
         }
     });
     dispatch_resume(timer);
