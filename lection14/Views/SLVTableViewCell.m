@@ -49,10 +49,15 @@
 }
 
 - (void)updateConstraints {
+    CGRect frame = self.contentView.frame;
     [self.photoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.contentView.mas_centerX);
         make.centerY.equalTo(self.contentView.mas_centerY).with.offset(-12);
-        make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
+        if (CGRectGetWidth(frame) > CGRectGetHeight(frame)) {
+            make.size.mas_equalTo(self.contentView.mas_height).sizeOffset(CGSizeMake(-8, -8));
+        } else {
+            make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
+        }
         self.photoImageView.layer.cornerRadius = 20;
         self.photoImageView.layer.masksToBounds = YES;
     }];
@@ -61,7 +66,7 @@
         make.centerY.equalTo(self.photoImageView.mas_centerY);
     }];
     [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top);
+        make.centerY.equalTo(self.contentView.mas_top).with.offset(4);
         make.left.equalTo(self.contentView.mas_left).with.offset(8);
         make.right.equalTo(self.contentView.mas_right).with.offset(-8);
     }];
@@ -85,11 +90,12 @@
     [self.activityIndicator stopAnimating];
     self.activityIndicator.hidden = YES;
     self.progressView.hidden = YES;
+    self.progressView.progress = 0;
 }
 
 - (IBAction)applyFilterSwitherValueChanged:(id)sender {
     
-   [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
+    [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
 }
 
 @end

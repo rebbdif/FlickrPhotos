@@ -7,14 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-@import UIKit;
 
-@interface SLVNetworkManager : NSObject
+@interface SLVNetworkManager : NSObject 
 
-@property (strong,nonatomic) NSURLSession *session;
-@property (weak,nonatomic) id downloadProgressDelegate;
-
-- (void)getModelFromURL:(NSURL *) url withCompletionHandler:(void (^)(NSData * data))completionHandler;
-- (NSURLSessionDataTask *)downloadImageFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
++ (void)getModelWithSession:(NSURLSession *) session fromURL:(NSURL *) url withCompletionHandler:(void (^)(NSDictionary * json))completionHandler;
++ (NSURLSessionTask *)downloadImageWithSession:(NSURLSession *) session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
 
 @end

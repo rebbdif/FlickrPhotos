@@ -9,7 +9,6 @@
 #import "SLVTableViewController.h"
 #import "SLVSearchResultsModel.h"
 #import "SLVItem.h"
-#import "SLVTableViewController.h"
 #import "SLVTableViewCell.h"
 #import "SLVTableViewControllerDataProvider.h"
 
@@ -34,6 +33,10 @@ static NSString *const reuseID = @"cell";
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.dataProvider.tableView = self.tableView;
@@ -52,14 +55,28 @@ static NSString *const reuseID = @"cell";
     [self.searchBar sizeToFit];
     
     self.tableView.rowHeight = 368;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgressNotification:) name:@"updateProgressNotification" object:nil];
+    
     ///
-    [self.searchBar endEditing:YES];
     __weak typeof(self) weakself = self;
-    self.model.searchRequest = @"street art";
+    [self.searchBar endEditing:YES];
+    self.model.searchRequest = @"cat";
     [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
         [weakself.tableView reloadData];
     }];
     ///
+}
+
+- (void)updateProgressNotification:(NSNotification *)notification {
+    NSIndexPath *indexPath = notification.object;
+    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (cell) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            SLVItem *currentItem = self.model.items[indexPath.row];
+            cell.progressView.progress = currentItem.downloadProgress;
+        });
+    }
 }
 
 #pragma mark - Search Bar Delegate
@@ -101,10 +118,6 @@ static NSString *const reuseID = @"cell";
     }
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
 - (void)loadImagesForOnscreenRows {
     if (self.model.items.count > 0) {
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
@@ -120,6 +133,5 @@ static NSString *const reuseID = @"cell";
         }
     }
 }
-
 
 @end

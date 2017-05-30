@@ -10,14 +10,14 @@
 #import "ImageDownloadOperation.h"
 #import "SLVImageProcessing.h"
 #import "SLVNetworkManager.h"
-#import "SLVTableViewController.h"
 
-@interface SLVSearchResultsModel()
+@interface SLVSearchResultsModel() <NSURLSessionDownloadDelegate>
 
 @property (assign, nonatomic) NSUInteger page;
 @property (strong, nonatomic) NSMutableDictionary<NSIndexPath *, ImageDownloadOperation *> *imageOperations;
 @property (strong, nonatomic) NSOperationQueue *imagesQueue;
 @property (strong, nonatomic) SLVNetworkManager *networkManager;
+@property (strong, nonatomic) NSURLSession *session;
 
 @end
 
@@ -28,8 +28,9 @@
     if (self) {
         _imageOperations = [NSMutableDictionary new];
         _imagesQueue = [NSOperationQueue new];
+        _imagesQueue.name = @"imagesQueue";
         _imagesQueue.qualityOfService = QOS_CLASS_DEFAULT;
-        _networkManager = [SLVNetworkManager new];
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
         _imageCache = [NSCache new];
         _page = 1;
         _items = [NSArray new];
@@ -43,8 +44,8 @@
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
     NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu",escapedString,apiKey,self.page];
     NSURL *url = [NSURL URLWithString:urls];
-    [self.networkManager getModelFromURL:url withCompletionHandler:^(NSData *data) {
-        NSArray *newItems = [self parseData:data];
+    [SLVNetworkManager getModelWithSession:self.session fromURL:url withCompletionHandler:^(NSDictionary *json) {
+        NSArray *newItems = [self parseData:json];
         self.items = [self.items arrayByAddingObjectsFromArray:newItems];
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler();
@@ -53,20 +54,15 @@
     self.page++;
 }
 
-- (NSArray *)parseData:(NSData *)data {
-    if (!data) {
-        return nil;
-    } else {
-        NSError *error=nil;
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-        if (error) {
-            NSLog(@"ERROR PARSING JSON %@",error.userInfo);
-        }
+- (NSArray *)parseData:(NSDictionary *)json {
+    if (json) {
         NSMutableArray *parsingResults = [NSMutableArray new];
         for (NSDictionary * dict in json[@"photos"][@"photo"]) {
             [parsingResults addObject:[SLVItem itemWithDictionary:dict]];
         }
         return [parsingResults copy];
+    } else {
+        return nil;
     }
 }
 
@@ -77,8 +73,9 @@
             ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
             imageDownloadOperation.indexPath = indexPath;
             imageDownloadOperation.item = currentItem;
-            imageDownloadOperation.networkManager = self.networkManager;
+            imageDownloadOperation.session = self.session;
             imageDownloadOperation.imageCache = self.imageCache;
+            imageDownloadOperation.name = [NSString stringWithFormat:@"imageDownloadOperation for index %lu",indexPath.row];
             imageDownloadOperation.completionBlock = ^{
                 completionHandler();
             };
@@ -99,10 +96,8 @@
         SLVItem *currentItem = self.items[indexPath.row];
         currentItem.applyFilterSwitherValue = YES;
         NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
                 UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:[self.imageCache objectForKey:indexPath]];
                 completion(filteredImage);
-            });
         }];
         [filterOperation addDependency:[self.imageOperations objectForKey:indexPath]];
         [self.imagesQueue addOperation:filterOperation];
@@ -131,5 +126,16 @@
     [self.imageOperations removeAllObjects];
 }
 
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+      didWriteData:(int64_t)bytesWritten
+ totalBytesWritten:(int64_t)totalBytesWritten
+totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //    self.progressView.progress = (float)totalBytesWritten / totalBytesExpectedToWrite;
+    });
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+}
 
 @end
