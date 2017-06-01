@@ -72,7 +72,9 @@
         float expected = weakself.task.countOfBytesExpectedToReceive;
         if (expected!=0) {
             weakself.item.downloadProgress = received/expected;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification" object:self.indexPath];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification" object:self.indexPath];
+            });
         }
     });
     dispatch_resume(timer);
