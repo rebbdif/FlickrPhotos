@@ -54,7 +54,7 @@
         make.centerX.equalTo(self.contentView.mas_centerX);
         make.centerY.equalTo(self.contentView.mas_centerY).with.offset(-12);
         if (CGRectGetWidth(frame) > CGRectGetHeight(frame)) {
-            make.size.mas_equalTo(self.contentView.mas_height).sizeOffset(CGSizeMake(-8, -8));
+            make.size.mas_equalTo(@312);
         } else {
             make.size.mas_equalTo(self.contentView.mas_width).sizeOffset(CGSizeMake(-8, -8));
         }
