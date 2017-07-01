@@ -10,6 +10,7 @@
 #import "SLVImageDownloadOperation.h"
 #import "SLVImageProcessing.h"
 #import "SLVNetworkManager.h"
+#import "SLVCache.h"
 
 @interface SLVSearchResultsModel()
 
@@ -33,8 +34,7 @@
         _imageFilteringQueue.qualityOfService = NSQualityOfServiceUserInitiated;
         _session = [NSURLSession sessionWithConfiguration:
                     [NSURLSessionConfiguration defaultSessionConfiguration]];
-        _imageCache = [NSCache new];
-        _imageCache.totalCostLimit = 
+        _imageCache = [SLVCache cacheWithCapacity:40];
         _page = 1;
         _items = [NSArray new];
     }
@@ -121,7 +121,7 @@
 - (void)clearModel {
     self.items = [NSArray new];
     [self pauseOperations];
-    [self.imageCache removeAllObjects];
+    [self.imageCache clear];
     self.page = 0;
 }
 

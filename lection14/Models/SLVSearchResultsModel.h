@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SLVItem.h"
 
+@class SLVCache;
 @class SLVImageDownloadOperation;
 @class SLVNetworkManager;
 
@@ -18,7 +19,7 @@ typedef void(^voidBlock)(void);
 
 @property (nonatomic, copy) NSArray<SLVItem *> *items;
 @property (nonatomic, copy) NSString *searchRequest;
-@property (nonatomic, copy) NSCache *imageCache;
+@property (nonatomic, strong) SLVCache *imageCache;
 
 - (void)getItemsForRequest:(NSString *)request withCompletionHandler:(voidBlock)completionHandler;
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler;

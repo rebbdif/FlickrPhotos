@@ -11,7 +11,8 @@
 @interface SLVCache : NSObject
 
 + (instancetype)cacheWithCapacity:(NSUInteger)maxNumberOfItems;
-
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCapacity:(NSUInteger)maxNumberOfItems;
 
 - (NSUInteger)numberOfItems;

@@ -10,10 +10,11 @@
 
 @class SLVItem;
 @class NSURLSession;
+@class SLVCache;
 
 @interface SLVImageDownloadOperation : NSOperation
 
-- (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(NSCache *)cache;
+- (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(SLVCache *)cache;
 
 - (void)pause;
 - (void)resume;

@@ -9,6 +9,7 @@
 #import "SLVTableViewControllerDataProvider.h"
 #import "SLVSearchResultsModel.h"
 #import "SLVTableViewCell.h"
+#import "SLVCache.h"
 
 @interface SLVTableViewControllerDataProvider() <CellDelegate>
 

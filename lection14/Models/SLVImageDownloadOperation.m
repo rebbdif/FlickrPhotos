@@ -11,19 +11,18 @@
 #import "SLVSearchResultsModel.h"
 #import "SLVNetworkManager.h"
 #import "SLVImageProcessing.h"
+#import "SLVCache.h"
 
 static const float kItemWidth = 312;
 static const float kItemHeight = 312;
 
 @interface SLVImageDownloadOperation()
 
-@property (strong, nonatomic) NSURLSessionTask *task;
-@property (strong, nonatomic) __block UIImage *downloadedImage;
-
-@property (weak,nonatomic) NSURLSession *session;
-@property (weak, nonatomic) SLVItem *item;
-@property (strong, nonatomic) NSIndexPath *indexPath;
-@property (weak, nonatomic) NSCache *imageCache;
+@property (nonatomic, weak) NSURLSessionTask *task;
+@property (nonatomic, weak) NSURLSession *session;
+@property (nonatomic, weak) SLVItem *item;
+@property (nonatomic, weak) NSIndexPath *indexPath;
+@property (nonatomic, weak) SLVCache *imageCache;
 
 @property (nonatomic, strong) dispatch_semaphore_t imageDownloadedSemaphore;
 
@@ -31,7 +30,7 @@ static const float kItemHeight = 312;
 
 @implementation SLVImageDownloadOperation
 
-- (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(NSCache *)cache {
+- (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(SLVCache *)cache {
     self = [super init];
     if (self) {
         _session = session;

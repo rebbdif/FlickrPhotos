@@ -11,6 +11,7 @@
 #import "SLVItem.h"
 #import "SLVTableViewCell.h"
 #import "SLVTableViewControllerDataProvider.h"
+#import "SLVCache.h"
 
 @interface SLVTableViewController () <UISearchBarDelegate>
 
@@ -135,4 +136,10 @@
     }
 }
 
+- (void)didReceiveMemoryWarning {
+    [self.model.imageCache clear];
+    [super didReceiveMemoryWarning];
+}
+
 @end
+
