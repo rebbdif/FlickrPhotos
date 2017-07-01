@@ -7,15 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SLVTableViewController.h"
 @import UIKit;
 
 @class SLVSearchResultsModel;
+@class SLVTableViewCell;
 
 @interface SLVTableViewControllerDataProvider : NSObject <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) UITableView *tableView;
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model tableView:(UITableView *)tableView;
 
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model;
+- (void)configureCell:(SLVTableViewCell *)cell forTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
 
 @end

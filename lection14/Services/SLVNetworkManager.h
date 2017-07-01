@@ -10,7 +10,8 @@
 
 @interface SLVNetworkManager : NSObject 
 
-+ (void)getModelWithSession:(NSURLSession *) session fromURL:(NSURL *) url withCompletionHandler:(void (^)(NSDictionary * json))completionHandler;
-+ (NSURLSessionTask *)downloadImageWithSession:(NSURLSession *) session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
++ (void)getModelWithSession:(NSURLSession *)session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSDictionary * json))completionHandler;
+
++ (NSURLSessionTask *)downloadImageWithSession:(NSURLSession *)session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *data))completionHandler;
 
 @end

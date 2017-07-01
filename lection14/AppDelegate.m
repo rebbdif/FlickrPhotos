@@ -10,19 +10,15 @@
 #import "SLVTableViewController.h"
 #import "SLVSearchResultsModel.h"
 
-@interface AppDelegate ()
-
-@end
-
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window=[[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     SLVSearchResultsModel *model = [SLVSearchResultsModel new];
-    SLVTableViewController *tableVC=[[SLVTableViewController alloc]initWithModel:model];
-    self.window.rootViewController=tableVC;
+    SLVTableViewController *tableVC = [[SLVTableViewController alloc] initWithModel:model];
+    self.window.rootViewController = tableVC;
     [self.window makeKeyAndVisible];
     return YES;
 }
+
 @end

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04E2FF9C1EBB90A50074C5D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FF9B1EBB90A50074C5D9 /* main.m */; };
 		04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */; };
-		04E2FFA81EBB90A50074C5D9 /* lection14.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */; };
 		04E2FFAA1EBB90A50074C5D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */; };
 		04E2FFAD1EBB90A50074C5D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E2FFAB1EBB90A50074C5D9 /* LaunchScreen.storyboard */; };
 		6350EF801ED583FB00D7C8CE /* SLVTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF7F1ED583FB00D7C8CE /* SLVTableViewCell.m */; };
@@ -17,9 +16,10 @@
 		6350EF861ED5841F00D7C8CE /* SLVNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF851ED5841F00D7C8CE /* SLVNetworkManager.m */; };
 		6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF881ED5843000D7C8CE /* SLVItem.m */; };
 		6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */; };
-		6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */; };
+		6350EF8F1ED5923100D7C8CE /* SLVImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */; };
+		63A8900E1F07F32E008AAAF4 /* SLVCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A8900D1F07F32E008AAAF4 /* SLVCache.m */; };
+		63A890101F07FAE4008AAAF4 /* SLVTestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A8900F1F07FAE4008AAAF4 /* SLVTestCache.m */; };
 		63ABAB831ED60E8900941726 /* SLVImageProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB821ED60E8900941726 /* SLVImageProcessing.m */; };
-		63ABAB881ED873CC00941726 /* SLVImageDownloadOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */; };
 		63ABAB8C1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB8B1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m */; };
 		63ACEF3E1EBD3F53007C0D41 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */; };
 /* End PBXBuildFile section */
@@ -39,7 +39,6 @@
 		04E2FF9B1EBB90A50074C5D9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04E2FF9D1EBB90A50074C5D9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = lection14.xcdatamodel; sourceTree = "<group>"; };
 		04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04E2FFAC1EBB90A50074C5D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04E2FFAE1EBB90A50074C5D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -54,11 +53,13 @@
 		6350EF881ED5843000D7C8CE /* SLVItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVItem.m; path = Models/SLVItem.m; sourceTree = "<group>"; };
 		6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVSearchResultsModel.h; path = Models/SLVSearchResultsModel.h; sourceTree = "<group>"; };
 		6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVSearchResultsModel.m; path = Models/SLVSearchResultsModel.m; sourceTree = "<group>"; };
-		6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageDownloadOperation.h; path = Models/ImageDownloadOperation.h; sourceTree = "<group>"; };
-		6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageDownloadOperation.m; path = Models/ImageDownloadOperation.m; sourceTree = "<group>"; };
+		6350EF8D1ED5923100D7C8CE /* SLVImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVImageDownloadOperation.h; path = Models/SLVImageDownloadOperation.h; sourceTree = "<group>"; };
+		6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageDownloadOperation.m; path = Models/SLVImageDownloadOperation.m; sourceTree = "<group>"; };
+		63A8900C1F07F32E008AAAF4 /* SLVCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVCache.h; path = Services/SLVCache.h; sourceTree = "<group>"; };
+		63A8900D1F07F32E008AAAF4 /* SLVCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVCache.m; path = Services/SLVCache.m; sourceTree = "<group>"; };
+		63A8900F1F07FAE4008AAAF4 /* SLVTestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVTestCache.m; path = lection14Tests/SLVTestCache.m; sourceTree = "<group>"; };
 		63ABAB811ED60E8900941726 /* SLVImageProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVImageProcessing.h; path = Services/SLVImageProcessing.h; sourceTree = "<group>"; };
 		63ABAB821ED60E8900941726 /* SLVImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageProcessing.m; path = Services/SLVImageProcessing.m; sourceTree = "<group>"; };
-		63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageDownloadOperationTests.m; path = lection14Tests/SLVImageDownloadOperationTests.m; sourceTree = "<group>"; };
 		63ABAB8A1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVTableViewControllerDataProvider.h; path = Controllers/SLVTableViewControllerDataProvider.h; sourceTree = "<group>"; };
 		63ABAB8B1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVTableViewControllerDataProvider.m; path = Controllers/SLVTableViewControllerDataProvider.m; sourceTree = "<group>"; };
 		63ACEF3C1EBD3B37007C0D41 /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
@@ -137,12 +138,12 @@
 		04E2FFD21EBBAC040074C5D9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */,
-				6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */,
-				6350EF871ED5843000D7C8CE /* SLVItem.h */,
-				6350EF881ED5843000D7C8CE /* SLVItem.m */,
 				6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */,
 				6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */,
+				6350EF8D1ED5923100D7C8CE /* SLVImageDownloadOperation.h */,
+				6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */,
+				6350EF871ED5843000D7C8CE /* SLVItem.h */,
+				6350EF881ED5843000D7C8CE /* SLVItem.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -154,6 +155,8 @@
 				6350EF851ED5841F00D7C8CE /* SLVNetworkManager.m */,
 				63ABAB811ED60E8900941726 /* SLVImageProcessing.h */,
 				63ABAB821ED60E8900941726 /* SLVImageProcessing.m */,
+				63A8900C1F07F32E008AAAF4 /* SLVCache.h */,
+				63A8900D1F07F32E008AAAF4 /* SLVCache.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -170,7 +173,7 @@
 		63ABAB891ED873D500941726 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */,
+				63A8900F1F07FAE4008AAAF4 /* SLVTestCache.m */,
 			);
 			name = UnitTests;
 			sourceTree = "<group>";
@@ -181,7 +184,6 @@
 				04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */,
 				04E2FFAB1EBB90A50074C5D9 /* LaunchScreen.storyboard */,
 				04E2FFAE1EBB90A50074C5D9 /* Info.plist */,
-				04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */,
 				04E2FF9D1EBB90A50074C5D9 /* AppDelegate.h */,
 				04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */,
 			);
@@ -332,15 +334,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */,
-				04E2FFA81EBB90A50074C5D9 /* lection14.xcdatamodeld in Sources */,
 				6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */,
 				04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */,
-				6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */,
+				6350EF8F1ED5923100D7C8CE /* SLVImageDownloadOperation.m in Sources */,
 				04E2FF9C1EBB90A50074C5D9 /* main.m in Sources */,
 				6350EF801ED583FB00D7C8CE /* SLVTableViewCell.m in Sources */,
 				63ABAB8C1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m in Sources */,
 				6350EF861ED5841F00D7C8CE /* SLVNetworkManager.m in Sources */,
 				63ABAB831ED60E8900941726 /* SLVImageProcessing.m in Sources */,
+				63A8900E1F07F32E008AAAF4 /* SLVCache.m in Sources */,
 				6350EF831ED5841000D7C8CE /* SLVTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,7 +351,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63ABAB881ED873CC00941726 /* SLVImageDownloadOperationTests.m in Sources */,
+				63A890101F07FAE4008AAAF4 /* SLVTestCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +477,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = lection14/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sbt.lection14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -491,6 +494,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = lection14/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sbt.lection14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -554,19 +558,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */,
-			);
-			currentVersion = 04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */;
-			path = lection14.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 04E2FF8F1EBB90A50074C5D9 /* Project object */;
 }

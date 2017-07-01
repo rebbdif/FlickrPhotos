@@ -16,14 +16,13 @@
 
 @interface SLVTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) UIImageView *photoImageView;
-@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (assign, nonatomic, readonly) CGSize imageViewSize;
-@property (strong, nonatomic) UIProgressView *progressView;
-@property (strong, nonatomic) UISwitch *applyFilterSwitch;
-@property (strong, nonatomic) UILabel *applyFilterLabel;
+@property (nonatomic, strong) UIImageView *photoImageView;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic, strong) UISwitch *applyFilterSwitch;
+@property (nonatomic, strong) UILabel *applyFilterLabel;
 
-@property (strong, nonatomic) NSIndexPath *indexPath;
-@property (weak, nonatomic) id<CellDelegate> delegate;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic, weak) id<CellDelegate> delegate;
 
 @end

@@ -9,12 +9,6 @@
 #import "SLVTableViewCell.h"
 #import "Masonry/Masonry.h"
 
-@interface SLVTableViewCell()
-
-@property (assign, nonatomic, readwrite) CGSize imageViewSize;
-
-@end
-
 @implementation SLVTableViewCell
 
 + (BOOL)requiresConstraintBasedLayout {
@@ -25,14 +19,13 @@
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
         _photoImageView = [UIImageView new];
-        _activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         _activityIndicator.hidden = YES;
         _activityIndicator.hidesWhenStopped = YES;
         _activityIndicator.center = self.contentView.center;
-        _progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         
         _photoImageView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
-        // [_photoImageView setContentMode:UIViewContentModeScaleAspectFill];
         
         _applyFilterLabel = [UILabel new];
         _applyFilterLabel.text = @"Применить фильтры";
@@ -88,13 +81,11 @@
 - (void)prepareForReuse {
     self.photoImageView.image = nil;
     [self.activityIndicator stopAnimating];
-    self.activityIndicator.hidden = YES;
     self.progressView.hidden = YES;
     self.progressView.progress = 0;
 }
 
 - (IBAction)applyFilterSwitherValueChanged:(id)sender {
-    
     [self.delegate didClickSwitch:sender atIndexPath:self.indexPath];
 }
 

@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol  SLVTableVCDelegate<NSObject>
-
-@end
+@class SLVSearchResultsModel;
+@class SLVTableViewCell;
 
 @interface SLVTableViewController : UITableViewController
 
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model;
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model;
 
 @end

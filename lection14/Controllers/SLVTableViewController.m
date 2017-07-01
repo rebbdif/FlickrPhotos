@@ -11,24 +11,24 @@
 #import "SLVItem.h"
 #import "SLVTableViewCell.h"
 #import "SLVTableViewControllerDataProvider.h"
+#import "SLVCache.h"
 
 @interface SLVTableViewController () <UISearchBarDelegate>
 
-@property (strong, nonatomic, readwrite) SLVSearchResultsModel *model;
-@property (strong, nonatomic) UISearchBar *searchBar;
-@property (strong, nonatomic) SLVTableViewControllerDataProvider *dataProvider;
+@property (nonatomic, strong, readwrite) SLVSearchResultsModel *model;
+@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) SLVTableViewControllerDataProvider *dataProvider;
 
 @end
 
 @implementation SLVTableViewController
 
-static NSString *const reuseID = @"cell";
+#pragma mark - Lifecycle
 
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model {
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model {
     self = [super init];
     if (self) {
         _model = model;
-        _dataProvider = [[SLVTableViewControllerDataProvider alloc]initWithModel:model];
     }
     return self;
 }
@@ -39,42 +39,34 @@ static NSString *const reuseID = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.dataProvider.tableView = self.tableView;
-    self.tableView.delegate = _dataProvider;
-    self.tableView.dataSource = _dataProvider;
-    ((UIScrollView *)self.tableView).delegate = self;
-    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
-    
-    self.searchBar=[UISearchBar new];
-    self.searchBar.placeholder = @"Введите поисковый запрос";
-    self.tableView.tableHeaderView = self.searchBar;
+    self.dataProvider = [[SLVTableViewControllerDataProvider alloc] initWithModel:self.model tableView:self.tableView];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self.dataProvider;
+    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:NSStringFromClass([SLVTableViewCell class])];
     self.tableView.allowsSelection = NO;
-    self.searchBar.delegate = self;
-    [self.searchBar becomeFirstResponder];
     [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
-    [self.searchBar sizeToFit];
-    
     self.tableView.rowHeight = 368;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgressNotification:) name:@"updateProgressNotification" object:nil];
+    self.searchBar = [UISearchBar new];
+    self.searchBar.placeholder = @"Введите поисковый запрос";
+    self.searchBar.delegate = self;
+    [self.searchBar becomeFirstResponder];
+    [self.searchBar sizeToFit];
+    self.tableView.tableHeaderView = self.searchBar;
     
-    ///
-    __weak typeof(self) weakself = self;
-    [self.searchBar endEditing:YES];
-    self.model.searchRequest = @"cat";
-    [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
-        [weakself.tableView reloadData];
-    }];
-    ///
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgressNotification:) name:@"updateProgressNotification" object:nil];
 }
 
 - (void)updateProgressNotification:(NSNotification *)notification {
     NSIndexPath *indexPath = notification.object;
     SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    __weak typeof(self)weakSelf = self;
     if (cell) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            SLVItem *currentItem = self.model.items[indexPath.row];
-            cell.progressView.progress = currentItem.downloadProgress;
+            if (weakSelf.model.items.count > indexPath.row) {
+                SLVItem *currentItem = weakSelf.model.items[indexPath.row];
+                cell.progressView.progress = currentItem.downloadProgress;
+            }
         });
     }
 }
@@ -106,7 +98,7 @@ static NSString *const reuseID = @"cell";
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.model cancelOperations];
+    [self.model pauseOperations];
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -118,14 +110,27 @@ static NSString *const reuseID = @"cell";
     }
 }
 
+#pragma mark - TableViewDelegate
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 10)];
+    return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 10;
+}
+
+#pragma mark - services
+
 - (void)loadImagesForOnscreenRows {
     if (self.model.items.count > 0) {
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths) {
             [self.model loadImageForIndexPath:indexPath withCompletionHandler:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                    cell.photoImageView.image = [self.model.imageCache objectForKey:indexPath];
+                   SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                    [self.dataProvider configureCell:cell forTableView:self.tableView indexPath:indexPath];
                     [cell.activityIndicator stopAnimating];
                     cell.progressView.hidden = YES;
                 });
@@ -134,4 +139,10 @@ static NSString *const reuseID = @"cell";
     }
 }
 
+- (void)didReceiveMemoryWarning {
+    [self.model.imageCache clear];
+    [super didReceiveMemoryWarning];
+}
+
 @end
+
