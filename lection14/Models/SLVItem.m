@@ -7,13 +7,13 @@
 //
 
 #import "SLVItem.h"
-#
 
 @implementation SLVItem
 
 + (SLVItem *)itemWithDictionary:(NSDictionary *)dict {
-    SLVItem *item=[SLVItem new];
+    SLVItem *item = [SLVItem new];
     item.title = dict[@"title"];
+    
     NSString *secret = dict[@"secret"];
     NSString *server = dict[@"server"];
     NSString *farm = dict[@"farm"];
@@ -22,9 +22,7 @@
     NSString *url = [NSString stringWithFormat:@"https://farm%@.staticflickr.com/%@/%@_%@_h.jpg", farm, server, idd, secret];
     
     item.photoURL = [NSURL URLWithString:url];
-    
-    item.applyFilterSwitherValue = NO;
-    
+    item.filtered = NO;
     return item;
 }
 

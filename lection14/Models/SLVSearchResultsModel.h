@@ -8,21 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import "SLVItem.h"
-#import "SLVTableViewController.h"
 
-@class ImageDownloadOperation;
+@class SLVCache;
+@class SLVImageDownloadOperation;
 @class SLVNetworkManager;
 
-@interface SLVSearchResultsModel : NSObject <SLVTableVCDelegate>
+typedef void(^voidBlock)(void);
 
-@property (copy, nonatomic) NSArray<SLVItem *> *items;
-@property (strong, nonatomic) NSString *searchRequest;
-@property (strong, nonatomic) NSCache *imageCache;
+@interface SLVSearchResultsModel : NSObject
 
-- (void)getItemsForRequest:(NSString *)request withCompletionHandler: (void (^)(void))completionHandler;
-- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(void(^)(void))completionHandler;
-- (void)cancelOperations;
-- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image))completion;
+@property (nonatomic, copy) NSArray<SLVItem *> *items;
+@property (nonatomic, copy) NSString *searchRequest;
+@property (nonatomic, strong) SLVCache *imageCache;
+@property (nonatomic, strong) SLVCache *filteredImagesCache;
+
+- (void)getItemsForRequest:(NSString *)request withCompletionHandler:(voidBlock)completionHandler;
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler;
+- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *filteredImage))completion;
+- (void)pauseOperations;
 - (void)clearModel;
 
 @end
