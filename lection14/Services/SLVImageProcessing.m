@@ -19,8 +19,9 @@
     return result;
 }
 
-+ (UIImage *)cropImage:(UIImage *)origin toSize:(CGSize)itemSize {
-    
++ (UIImage *)cropImage:(UIImage *)origin width:(float)resultWidth heigth:(float)resultHeigth {
+    CGSize itemSize = CGSizeMake(resultWidth, resultHeigth);
+
     CGFloat side;
     CGFloat width = origin.size.width;
     CGFloat heigth = origin.size.height;

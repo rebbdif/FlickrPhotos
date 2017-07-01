@@ -11,7 +11,7 @@
 #import "SLVImageProcessing.h"
 #import "SLVNetworkManager.h"
 
-@interface SLVSearchResultsModel() <NSURLSessionDownloadDelegate>
+@interface SLVSearchResultsModel()
 
 @property (assign, nonatomic) NSUInteger page;
 @property (strong, nonatomic) NSMutableDictionary<NSIndexPath *, ImageDownloadOperation *> *imageOperations;
@@ -30,7 +30,7 @@
         _imagesQueue = [NSOperationQueue new];
         _imagesQueue.name = @"imagesQueue";
         _imagesQueue.qualityOfService = QOS_CLASS_DEFAULT;
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         _imageCache = [NSCache new];
         _page = 1;
         _items = [NSArray new];
@@ -38,7 +38,7 @@
     return self;
 }
 
-- (void)getItemsForRequest:(NSString*) request withCompletionHandler:(void (^)(void))completionHandler {
+- (void)getItemsForRequest:(NSString*) request withCompletionHandler:(voidBlock)completionHandler {
     NSString *normalizedRequest = [request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
@@ -66,7 +66,7 @@
     }
 }
 
-- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(void(^)(void))completionHandler {
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler {
     SLVItem *currentItem = self.items[indexPath.row];
     if (![self.imageCache objectForKey:currentItem.photoURL]) {
         if (!self.imageOperations[indexPath]) {
@@ -135,7 +135,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     });
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
-}
+
 
 @end

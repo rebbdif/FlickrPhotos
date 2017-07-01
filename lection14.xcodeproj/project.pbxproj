@@ -135,12 +135,12 @@
 		04E2FFD21EBBAC040074C5D9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */,
+				6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */,
 				6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */,
 				6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */,
 				6350EF871ED5843000D7C8CE /* SLVItem.h */,
 				6350EF881ED5843000D7C8CE /* SLVItem.m */,
-				6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */,
-				6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";

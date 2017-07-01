@@ -675,11 +675,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
             landmarkName = "-resume"
             landmarkType = "7">
          </BreakpointContent>
@@ -691,23 +691,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "-resume"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "100"
@@ -723,11 +707,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "-resume"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lection14/Models/ImageDownloadOperation.m"
+            timestampString = "520605215.061074"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
             landmarkName = "-main"
             landmarkType = "7">
          </BreakpointContent>
@@ -739,11 +739,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517669255.914671"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "-main"
             landmarkType = "7">
             <Locations>
@@ -787,7 +787,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517669255.914671"
+            timestampString = "520605215.061074"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "-main"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lection14/Models/ImageDownloadOperation.m"
+            timestampString = "520605215.061074"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "-main"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lection14/Models/ImageDownloadOperation.m"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
@@ -803,12 +835,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "-main"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "-pause"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -819,23 +851,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517669255.914671"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "-main"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
@@ -851,27 +867,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "-pause"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
             landmarkName = "-pause"
             landmarkType = "7">
          </BreakpointContent>
@@ -1075,11 +1075,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Controllers/SLVTableViewControllerDataProvider.m"
-            timestampString = "520603294.82877"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "-didClickSwitch:atIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1203,11 +1203,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517694685.14345"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
             landmarkName = "-main"
             landmarkType = "7">
          </BreakpointContent>
@@ -1219,11 +1219,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517692073.6184"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "-main"
             landmarkType = "7">
          </BreakpointContent>
@@ -1235,11 +1235,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517698481.095164"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "-main"
             landmarkType = "7">
          </BreakpointContent>
@@ -1267,11 +1267,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Models/ImageDownloadOperation.m"
-            timestampString = "517694722.416029"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "-main"
             landmarkType = "7">
          </BreakpointContent>
@@ -1299,12 +1299,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701345.006093"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "+cropImage:toSize:"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1315,12 +1315,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701345.006093"
+            timestampString = "520605215.061074"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "+cropImage:width:heigth:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lection14/Services/SLVImageProcessing.m"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
             endingLineNumber = "50"
-            landmarkName = "+cropImage:toSize:"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1331,12 +1347,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701345.006093"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "+cropImage:toSize:"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1347,12 +1363,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701345.006093"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "+cropImage:toSize:"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1363,12 +1379,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701329.377326"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "+cropImage:toSize:"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1379,28 +1395,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701330.603817"
+            timestampString = "520605215.061074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
-            landmarkName = "+cropImage:toSize:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "lection14/Services/SLVImageProcessing.m"
-            timestampString = "517701395.104621"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "+cropImage:toSize:"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "+cropImage:width:heigth:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1417,6 +1417,22 @@
             startingLineNumber = "51"
             endingLineNumber = "51"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "lection14/Models/SLVSearchResultsModel.m"
+            timestampString = "520604517.649543"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "-URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

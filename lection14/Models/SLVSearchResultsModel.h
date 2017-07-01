@@ -8,19 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import "SLVItem.h"
-#import "SLVTableViewController.h"
 
 @class ImageDownloadOperation;
 @class SLVNetworkManager;
 
+typedef void(^voidBlock)(void);
+
 @interface SLVSearchResultsModel : NSObject
 
-@property (copy, nonatomic) NSArray<SLVItem *> *items;
-@property (strong, nonatomic) NSString *searchRequest;
-@property (strong, nonatomic) NSCache *imageCache;
+@property (nonatomic, copy) NSArray<SLVItem *> *items;
+@property (nonatomic, copy) NSString *searchRequest;
+@property (nonatomic, copy) NSCache *imageCache;
 
-- (void)getItemsForRequest:(NSString *)request withCompletionHandler: (void (^)(void))completionHandler;
-- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(void(^)(void))completionHandler;
+- (void)getItemsForRequest:(NSString *)request withCompletionHandler:(voidBlock)completionHandler;
+- (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler;
 - (void)cancelOperations;
 - (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image))completion;
 - (void)clearModel;

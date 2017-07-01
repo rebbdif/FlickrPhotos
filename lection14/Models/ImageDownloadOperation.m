@@ -12,6 +12,8 @@
 #import "SLVNetworkManager.h"
 #import "SLVImageProcessing.h"
 
+static const float kItemWidth = 312;
+static const float kItemHeight = 312;
 
 @interface ImageDownloadOperation()
 
@@ -32,7 +34,6 @@
         _status = SLVImageStatusNone;
         _innerQueue = [NSOperationQueue new];
         _innerQueue.name = [NSString stringWithFormat:@"innerQueue for index %lu",self.indexPath.row];
-        _imageViewSize = CGSizeMake(312, 312);
     }
     return self;
 }
@@ -51,7 +52,7 @@
     }];
     
     self.cropOperation = [NSBlockOperation blockOperationWithBlock:^{
-        self.downloadedImage = [SLVImageProcessing cropImage:self.downloadedImage toSize:self.imageViewSize];
+        self.downloadedImage = [SLVImageProcessing cropImage:self.downloadedImage width:kItemWidth heigth:kItemHeight];
     }];
     [self.cropOperation addDependency:self.downloadOperation];
     
