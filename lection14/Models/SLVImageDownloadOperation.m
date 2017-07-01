@@ -25,6 +25,8 @@ static const float kItemHeight = 312;
 @property (strong, nonatomic) NSIndexPath *indexPath;
 @property (weak, nonatomic) NSCache *imageCache;
 
+@property (nonatomic, strong) dispatch_semaphore_t imageDownloadedSemaphore;
+
 @end
 
 @implementation SLVImageDownloadOperation
@@ -42,36 +44,40 @@ static const float kItemHeight = 312;
 }
 
 - (void)main {
-    dispatch_semaphore_t imageDownloadedSemaphore = dispatch_semaphore_create(0);
+    self.imageDownloadedSemaphore = dispatch_semaphore_create(0);
     
-    __weak typeof(self) weakself = self;
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, nil);
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.02 * NSEC_PER_SEC, 0.02 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(timer, ^{
-        float received = weakself.task.countOfBytesReceived;
-        float expected = weakself.task.countOfBytesExpectedToReceive;
-        if (expected!=0) {
-            weakself.item.downloadProgress = received / expected;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification" object:self.indexPath];
-            });
-        }
+        [self fireTimer];
     });
-    
     dispatch_resume(timer);
+    
+    [self loadImage];
+    
+    dispatch_semaphore_wait(self.imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
+    dispatch_cancel(timer);
+}
+
+- (void)loadImage {
+    __weak typeof(self) weakself = self;
     self.task = [SLVNetworkManager downloadImageWithSession:self.session fromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
         UIImage *downloadedImage = [UIImage imageWithData:data];
-        weakself.downloadedImage = [SLVImageProcessing cropImage:downloadedImage width:kItemWidth heigth:kItemHeight];
-        dispatch_semaphore_signal(imageDownloadedSemaphore);
+        UIImage *croppedImage = [SLVImageProcessing cropImage:downloadedImage width:kItemWidth heigth:kItemHeight];
+        [weakself.imageCache setObject:croppedImage forKey:weakself.indexPath];
+        dispatch_semaphore_signal(weakself.imageDownloadedSemaphore);
     }];
-    
-    dispatch_semaphore_wait(imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
-    dispatch_cancel(timer);
-    
-    if (self.downloadedImage) {
-        [self.imageCache setObject:self.downloadedImage forKey:self.indexPath];
-    } else {
-        NSLog(@"ERROR - there was no Image downloaded");
+}
+
+- (void)fireTimer {
+    float received = self.task.countOfBytesReceived;
+    float expected = self.task.countOfBytesExpectedToReceive;
+    if (expected != 0) {
+        self.item.downloadProgress = received / expected;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification"
+                                                                object:self.indexPath];
+        });
     }
 }
 
@@ -82,8 +88,11 @@ static const float kItemHeight = 312;
 
 - (void)pause {
     [self.task suspend];
-    [self cancel];
     NSLog(@"operation %@ paused", self.name);
+}
+
+- (void)dealloc {
+    NSLog(@"operation %@ dealloc", self.name);
 }
 
 @end

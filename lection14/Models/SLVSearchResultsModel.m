@@ -31,8 +31,10 @@
         _imageFilteringQueue = [NSOperationQueue new];
         _imageFilteringQueue.name = @"imageFilteringQueue";
         _imageFilteringQueue.qualityOfService = NSQualityOfServiceUserInitiated;
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        _session = [NSURLSession sessionWithConfiguration:
+                    [NSURLSessionConfiguration defaultSessionConfiguration]];
         _imageCache = [NSCache new];
+        _imageCache.totalCostLimit = 
         _page = 1;
         _items = [NSArray new];
     }

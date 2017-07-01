@@ -22,8 +22,8 @@ typedef void(^voidBlock)(void);
 
 - (void)getItemsForRequest:(NSString *)request withCompletionHandler:(voidBlock)completionHandler;
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler;
-- (void)pauseOperations;
 - (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image))completion;
+- (void)pauseOperations;
 - (void)clearModel;
 
 @end

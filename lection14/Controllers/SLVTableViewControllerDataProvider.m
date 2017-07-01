@@ -44,7 +44,8 @@
     SLVItem *currentItem = self.model.items[indexPath.row];
     cell.indexPath = indexPath;
     [cell.applyFilterSwitch setOn:currentItem.applyFilterSwitherValue];
-    if (![self.model.imageCache objectForKey:indexPath]) {
+    UIImage *image = [self.model.imageCache objectForKey:indexPath];
+    if (!image) {
         if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
             [self.model loadImageForIndexPath:indexPath withCompletionHandler:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -60,7 +61,7 @@
         cell.progressView.hidden = NO;
         cell.progressView.progress = currentItem.downloadProgress;
     } else {
-        cell.photoImageView.image = [self.model.imageCache objectForKey:indexPath];
+        cell.photoImageView.image = image;
         if (currentItem.applyFilterSwitherValue == YES) {
             [self.model filterItemAtIndexPath:indexPath filter:YES withCompletionBlock:^(UIImage *image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
