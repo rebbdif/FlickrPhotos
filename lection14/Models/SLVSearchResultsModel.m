@@ -35,6 +35,7 @@
         _session = [NSURLSession sessionWithConfiguration:
                     [NSURLSessionConfiguration defaultSessionConfiguration]];
         _imageCache = [SLVCache cacheWithCapacity:40];
+        _filteredImagesCache = [SLVCache cacheWithCapacity:5];
         _page = 1;
         _items = [NSArray new];
     }
@@ -47,7 +48,8 @@
     NSString *normalizedRequest = [request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
-    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu", escapedString,apiKey, self.page];
+    NSString *sortBy = @"interestingness-desc";
+    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&sort=%@&per_page=10&tags=%@%@&page=%lu", sortBy, escapedString, apiKey, self.page];
     NSURL *url = [NSURL URLWithString:urls];
     [SLVNetworkManager getModelWithSession:self.session fromURL:url withCompletionHandler:^(NSDictionary *json) {
         NSArray *newItems = [self parseData:json];
@@ -75,7 +77,7 @@
 
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler {
     SLVItem *currentItem = self.items[indexPath.row];
-    UIImage *image = [self.imageCache objectForKey:currentItem.photoURL];
+    UIImage *image = [self.imageCache objectForKey:indexPath];
     if (!image) {
         SLVImageDownloadOperation *imageDownloadOperation = [[SLVImageDownloadOperation alloc] initWithNetworkSession:self.session item:currentItem indexPath:indexPath cache:self.imageCache];
         imageDownloadOperation.completionBlock = ^{completionHandler(); };
@@ -92,28 +94,38 @@
     }
 }
 
-- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image)) completion {
-    SLVItem *currentItem = self.items[indexPath.row];
-    UIImage *image = [self.imageCache objectForKey:currentItem.photoURL];
-    if (image) {
-        if (filter) {
-            currentItem.applyFilterSwitherValue = YES;
-            NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
-                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:image];
-                completion(filteredImage);
-            }];
+- (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *filteredImage))completion {
+    UIImage *image = [self.imageCache objectForKey:indexPath];
+    if (filter) {
+        NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
+            SLVItem *currentItem = self.items[indexPath.row];
+            currentItem.filtered = YES;
+            UIImage *image = [self.imageCache objectForKey:indexPath];
+            UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:image];
+            completion(filteredImage);
+        }];
+        if (image) {
             [self.imageFilteringQueue addOperation:filterOperation];
         } else {
-            self.items[indexPath.row].applyFilterSwitherValue = NO;
-            completion(image);
+            for (SLVImageDownloadOperation *operation in self.imageDownloadQueue.operations) {
+                if ([operation.indexPath isEqual:indexPath]) {
+                    [filterOperation addDependency:operation];
+                    [self.imageFilteringQueue addOperation:filterOperation];
+                    break;
+                }
+            }
         }
+    } else {
+        self.items[indexPath.row].filtered = NO;
+        [self.filteredImagesCache removeObjectForKey:indexPath];
+        completion(image);
     }
 }
 
-#pragma mark - Services
+#pragma mark - Utilities
 
 - (void)pauseOperations {
-    for (SLVImageDownloadOperation *operation in _imageDownloadQueue.operations) {
+    for (SLVImageDownloadOperation *operation in self.imageDownloadQueue.operations) {
         [operation pause];
     }
 }

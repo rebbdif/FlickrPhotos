@@ -22,7 +22,7 @@
     NSString *url = [NSString stringWithFormat:@"https://farm%@.staticflickr.com/%@/%@_%@_h.jpg", farm, server, idd, secret];
     
     item.photoURL = [NSURL URLWithString:url];
-    item.applyFilterSwitherValue = NO;
+    item.filtered = NO;
     return item;
 }
 

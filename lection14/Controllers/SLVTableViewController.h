@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class SLVSearchResultsModel;
+@class SLVTableViewCell;
 
 @interface SLVTableViewController : UITableViewController
 

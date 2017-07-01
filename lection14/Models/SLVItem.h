@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) NSURL *photoURL;
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, assign) BOOL applyFilterSwitherValue;
+@property (nonatomic, assign) BOOL filtered;
 @property (nonatomic, assign) float downloadProgress;
 
 + (SLVItem *)itemWithDictionary:(NSDictionary *)dict;

@@ -14,9 +14,12 @@
 
 @interface SLVImageDownloadOperation : NSOperation
 
+@property (nonatomic, weak, readonly) NSIndexPath *indexPath;
+
 - (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(SLVCache *)cache;
 
 - (void)pause;
+
 - (void)resume;
 
 @end

@@ -41,10 +41,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SLVTableViewCell class]) forIndexPath:indexPath];
+    [self configureCell:cell forTableView:tableView indexPath:indexPath];
+    return cell;
+}
+
+- (void)configureCell:(SLVTableViewCell *)cell forTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
     cell.delegate = self;
     SLVItem *currentItem = self.model.items[indexPath.row];
     cell.indexPath = indexPath;
-    [cell.applyFilterSwitch setOn:currentItem.applyFilterSwitherValue];
+    [cell.applyFilterSwitch setOn:currentItem.filtered];
     UIImage *image = [self.model.imageCache objectForKey:indexPath];
     if (!image) {
         if (self.tableView.dragging == NO && self.tableView.decelerating == NO) {
@@ -62,17 +67,23 @@
         cell.progressView.hidden = NO;
         cell.progressView.progress = currentItem.downloadProgress;
     } else {
-        cell.photoImageView.image = image;
-        if (currentItem.applyFilterSwitherValue == YES) {
-            [self.model filterItemAtIndexPath:indexPath filter:YES withCompletionBlock:^(UIImage *image) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                    cell.photoImageView.image = image;
-                });
-            }];
+        if (currentItem.filtered) {
+            UIImage *filteredImage = [self.model.filteredImagesCache objectForKey:indexPath];
+            if (!filteredImage) {
+                __weak typeof(self) weakSelf = self;
+                [self.model filterItemAtIndexPath:indexPath filter:YES withCompletionBlock:^(UIImage *filteredImage) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        SLVTableViewCell *cell = [weakSelf.tableView cellForRowAtIndexPath:indexPath];
+                        cell.photoImageView.image = filteredImage;
+                    });
+                }];
+            } else {
+                cell.photoImageView.image = filteredImage;
+            }
+        } else {
+            cell.photoImageView.image = image;
         }
     }
-    return cell;
 }
 
 #pragma mark - CellDelegate

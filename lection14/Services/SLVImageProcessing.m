@@ -16,8 +16,14 @@
     CIFilter *filter = [CIFilter filterWithName:@"CIPhotoEffectMono"];
     [filter setValue:originCI forKey:kCIInputImageKey];
     CIImage *resultCI = filter.outputImage;
-    UIImage *result = [UIImage imageWithCIImage:resultCI];
-    return result;
+    
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGRect extent = [resultCI extent];
+    CGImageRef cgImage = [context createCGImage:resultCI fromRect:extent];
+    
+    UIImage *filteredImage = [[UIImage alloc] initWithCGImage:cgImage];
+    
+    return filteredImage;
 }
 
 + (UIImage *)cropImage:(UIImage *)origin width:(float)resultWidth heigth:(float)resultHeigth {
@@ -30,16 +36,18 @@
     
     if (heigth > width) {
         side = width;
-        CGFloat offset = (heigth - width)/2;
+        CGFloat offset = (heigth - width) / 2;
         CGRect croppedRect = CGRectMake(0, offset, side, side);
         CGImageRef img = CGImageCreateWithImageInRect(origin.CGImage, croppedRect);
         squareImage = [[UIImage alloc] initWithCGImage:img];
+        img = nil;
     } else {
         side = heigth;
-        CGFloat offset = (width - heigth)/2;
+        CGFloat offset = (width - heigth) / 2;
         CGRect croppedRect = CGRectMake(offset, 0, side, side);
         CGImageRef img = CGImageCreateWithImageInRect(origin.CGImage, croppedRect);
         squareImage = [[UIImage alloc] initWithCGImage:img];
+        img = nil;
     }
     
     UIGraphicsBeginImageContextWithOptions(itemSize, YES, 0.0);

@@ -21,7 +21,7 @@ static const float kItemHeight = 312;
 @property (nonatomic, weak) NSURLSessionTask *task;
 @property (nonatomic, weak) NSURLSession *session;
 @property (nonatomic, weak) SLVItem *item;
-@property (nonatomic, weak) NSIndexPath *indexPath;
+@property (nonatomic, weak, readwrite) NSIndexPath *indexPath;
 @property (nonatomic, weak) SLVCache *imageCache;
 
 @property (nonatomic, strong) dispatch_semaphore_t imageDownloadedSemaphore;
@@ -37,14 +37,15 @@ static const float kItemHeight = 312;
         _item = item;
         _indexPath = indexPath;
         _imageCache = cache;
-        self.name = [NSString stringWithFormat:@"imageDownloadOperation for index %lu",indexPath.row];
+        self.name = [NSString stringWithFormat:@"imageDownloadOperationForIndex %lu",indexPath.row];
     }
     return self;
 }
 
 - (void)main {
     self.imageDownloadedSemaphore = dispatch_semaphore_create(0);
-    
+    NSLog(@"operation %@ started", self.name);
+
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, nil);
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.02 * NSEC_PER_SEC, 0.02 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(timer, ^{

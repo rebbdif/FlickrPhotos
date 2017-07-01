@@ -46,24 +46,27 @@
     self.tableView.allowsSelection = NO;
     [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
     self.tableView.rowHeight = 368;
-
+    
     self.searchBar = [UISearchBar new];
     self.searchBar.placeholder = @"Введите поисковый запрос";
     self.searchBar.delegate = self;
     [self.searchBar becomeFirstResponder];
     [self.searchBar sizeToFit];
     self.tableView.tableHeaderView = self.searchBar;
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgressNotification:) name:@"updateProgressNotification" object:nil];
 }
 
 - (void)updateProgressNotification:(NSNotification *)notification {
     NSIndexPath *indexPath = notification.object;
     SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    __weak typeof(self)weakSelf = self;
     if (cell) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            SLVItem *currentItem = self.model.items[indexPath.row];
-            cell.progressView.progress = currentItem.downloadProgress;
+            if (weakSelf.model.items.count > indexPath.row) {
+                SLVItem *currentItem = weakSelf.model.items[indexPath.row];
+                cell.progressView.progress = currentItem.downloadProgress;
+            }
         });
     }
 }
@@ -126,8 +129,8 @@
         for (NSIndexPath *indexPath in visiblePaths) {
             [self.model loadImageForIndexPath:indexPath withCompletionHandler:^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-                    cell.photoImageView.image = [self.model.imageCache objectForKey:indexPath];
+                   SLVTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+                    [self.dataProvider configureCell:cell forTableView:self.tableView indexPath:indexPath];
                     [cell.activityIndicator stopAnimating];
                     cell.progressView.hidden = YES;
                 });
