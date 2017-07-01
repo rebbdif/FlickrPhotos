@@ -12,18 +12,18 @@
 
 @interface SLVTableViewControllerDataProvider() <CellDelegate>
 
-@property (weak, nonatomic) SLVSearchResultsModel *model;
+@property (nonatomic, weak) SLVSearchResultsModel *model;
+@property (nonatomic, weak) UITableView *tableView;
 
 @end
 
 @implementation SLVTableViewControllerDataProvider
 
-static NSString *const reuseID = @"cell";
-
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model {
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model tableView:(UITableView *)tableView {
     self = [super init];
     if (self) {
         _model = model;
+        _tableView = tableView;
     }
     return self;
 }
@@ -31,15 +31,15 @@ static NSString *const reuseID = @"cell";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.model.items.count == 0 ? 0 : 1;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.model.items.count == 0 ? 0 : self.model.items.count;
+    return self.model.items.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: reuseID forIndexPath:indexPath];
+    SLVTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SLVTableViewCell class]) forIndexPath:indexPath];
     cell.delegate = self;
     SLVItem *currentItem = self.model.items[indexPath.row];
     cell.indexPath = indexPath;
@@ -92,7 +92,5 @@ static NSString *const reuseID = @"cell";
         }];
     }
 }
-
-
 
 @end

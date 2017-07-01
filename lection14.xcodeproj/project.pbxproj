@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04E2FF9C1EBB90A50074C5D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FF9B1EBB90A50074C5D9 /* main.m */; };
 		04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */; };
-		04E2FFA81EBB90A50074C5D9 /* lection14.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */; };
 		04E2FFAA1EBB90A50074C5D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */; };
 		04E2FFAD1EBB90A50074C5D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E2FFAB1EBB90A50074C5D9 /* LaunchScreen.storyboard */; };
 		6350EF801ED583FB00D7C8CE /* SLVTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF7F1ED583FB00D7C8CE /* SLVTableViewCell.m */; };
@@ -39,7 +38,6 @@
 		04E2FF9B1EBB90A50074C5D9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04E2FF9D1EBB90A50074C5D9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = lection14.xcdatamodel; sourceTree = "<group>"; };
 		04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04E2FFAC1EBB90A50074C5D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04E2FFAE1EBB90A50074C5D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 				04E2FFA91EBB90A50074C5D9 /* Assets.xcassets */,
 				04E2FFAB1EBB90A50074C5D9 /* LaunchScreen.storyboard */,
 				04E2FFAE1EBB90A50074C5D9 /* Info.plist */,
-				04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */,
 				04E2FF9D1EBB90A50074C5D9 /* AppDelegate.h */,
 				04E2FF9E1EBB90A50074C5D9 /* AppDelegate.m */,
 			);
@@ -332,7 +329,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */,
-				04E2FFA81EBB90A50074C5D9 /* lection14.xcdatamodeld in Sources */,
 				6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */,
 				04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */,
 				6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */,
@@ -475,6 +471,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = lection14/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sbt.lection14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -491,6 +488,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = lection14/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sbt.lection14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -554,19 +552,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		04E2FFA61EBB90A50074C5D9 /* lection14.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */,
-			);
-			currentVersion = 04E2FFA71EBB90A50074C5D9 /* lection14.xcdatamodel */;
-			path = lection14.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 04E2FF8F1EBB90A50074C5D9 /* Project object */;
 }

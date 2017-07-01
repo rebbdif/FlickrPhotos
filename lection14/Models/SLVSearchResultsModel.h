@@ -13,7 +13,7 @@
 @class ImageDownloadOperation;
 @class SLVNetworkManager;
 
-@interface SLVSearchResultsModel : NSObject <SLVTableVCDelegate>
+@interface SLVSearchResultsModel : NSObject
 
 @property (copy, nonatomic) NSArray<SLVItem *> *items;
 @property (strong, nonatomic) NSString *searchRequest;

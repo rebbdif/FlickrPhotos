@@ -66,7 +66,7 @@
     
     __weak typeof(self) weakself = self;
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, nil);
-    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
+    dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.02 * NSEC_PER_SEC, 0.02 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(timer, ^{
         float received = weakself.task.countOfBytesReceived;
         float expected = weakself.task.countOfBytesExpectedToReceive;

@@ -14,8 +14,6 @@
 
 @interface SLVTableViewControllerDataProvider : NSObject <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) UITableView *tableView;
-
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model;
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model tableView:(UITableView *)tableView;
 
 @end

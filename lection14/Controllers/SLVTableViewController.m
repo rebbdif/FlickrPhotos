@@ -14,21 +14,20 @@
 
 @interface SLVTableViewController () <UISearchBarDelegate>
 
-@property (strong, nonatomic, readwrite) SLVSearchResultsModel *model;
-@property (strong, nonatomic) UISearchBar *searchBar;
-@property (strong, nonatomic) SLVTableViewControllerDataProvider *dataProvider;
+@property (nonatomic, strong, readwrite) SLVSearchResultsModel *model;
+@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) SLVTableViewControllerDataProvider *dataProvider;
 
 @end
 
 @implementation SLVTableViewController
 
-static NSString *const reuseID = @"cell";
+#pragma mark - Lifecycle
 
-- (instancetype)initWithModel:(id<SLVTableVCDelegate>)model {
+- (instancetype)initWithModel:(SLVSearchResultsModel *)model {
     self = [super init];
     if (self) {
         _model = model;
-        _dataProvider = [[SLVTableViewControllerDataProvider alloc]initWithModel:model];
     }
     return self;
 }
@@ -39,33 +38,22 @@ static NSString *const reuseID = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.dataProvider.tableView = self.tableView;
-    self.tableView.delegate = _dataProvider;
-    self.tableView.dataSource = _dataProvider;
-    ((UIScrollView *)self.tableView).delegate = self;
-    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:reuseID];
-    
-    self.searchBar=[UISearchBar new];
-    self.searchBar.placeholder = @"Введите поисковый запрос";
-    self.tableView.tableHeaderView = self.searchBar;
+    self.dataProvider = [[SLVTableViewControllerDataProvider alloc] initWithModel:self.model tableView:self.tableView];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self.dataProvider;
+    [self.tableView registerClass:[SLVTableViewCell class] forCellReuseIdentifier:NSStringFromClass([SLVTableViewCell class])];
     self.tableView.allowsSelection = NO;
+    [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+    self.tableView.rowHeight = 368;
+
+    self.searchBar = [UISearchBar new];
+    self.searchBar.placeholder = @"Введите поисковый запрос";
     self.searchBar.delegate = self;
     [self.searchBar becomeFirstResponder];
-    [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
     [self.searchBar sizeToFit];
-    
-    self.tableView.rowHeight = 368;
-    
+    self.tableView.tableHeaderView = self.searchBar;
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgressNotification:) name:@"updateProgressNotification" object:nil];
-    
-    ///
-    __weak typeof(self) weakself = self;
-    [self.searchBar endEditing:YES];
-    self.model.searchRequest = @"cat";
-    [self.model getItemsForRequest:self.model.searchRequest withCompletionHandler:^{
-        [weakself.tableView reloadData];
-    }];
-    ///
 }
 
 - (void)updateProgressNotification:(NSNotification *)notification {
@@ -117,6 +105,19 @@ static NSString *const reuseID = @"cell";
         }];
     }
 }
+
+#pragma mark - TableViewDelegate
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 10)];
+    return view;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 10;
+}
+
+#pragma mark - services
 
 - (void)loadImagesForOnscreenRows {
     if (self.model.items.count > 0) {
