@@ -11,10 +11,10 @@
 
 @interface SLVItem : NSObject
 
-@property (strong, nonatomic) NSURL *photoURL;
-@property (strong, nonatomic) NSString *title;
-@property (assign, nonatomic) BOOL applyFilterSwitherValue;
-@property (assign, nonatomic) float downloadProgress;
+@property (nonatomic, strong) NSURL *photoURL;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, assign) BOOL applyFilterSwitherValue;
+@property (nonatomic, assign) float downloadProgress;
 
 + (SLVItem *)itemWithDictionary:(NSDictionary *)dict;
 

@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-@import UIKit;
+
+@class UIImage;
 
 @interface SLVImageProcessing : NSObject
 

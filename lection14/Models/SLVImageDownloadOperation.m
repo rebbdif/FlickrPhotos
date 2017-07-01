@@ -36,49 +36,42 @@ static const float kItemHeight = 312;
         _item = item;
         _indexPath = indexPath;
         _imageCache = cache;
-         self.name = [NSString stringWithFormat:@"imageDownloadOperation for index %lu",indexPath.row];
+        self.name = [NSString stringWithFormat:@"imageDownloadOperation for index %lu",indexPath.row];
     }
     return self;
 }
 
 - (void)main {
-    NSLog(@"operation %ld began", (long)self.indexPath.row);
     dispatch_semaphore_t imageDownloadedSemaphore = dispatch_semaphore_create(0);
     
-        __weak typeof(self) weakself = self;
-        self.task = [SLVNetworkManager downloadImageWithSession:self.session fromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
-            weakself.downloadedImage = [UIImage imageWithData:data];
-            dispatch_semaphore_signal(imageDownloadedSemaphore);
-        }];
-    
-        self.downloadedImage = [SLVImageProcessing cropImage:self.downloadedImage width:kItemWidth heigth:kItemHeight];
-    
-        self.downloadedImage = [SLVImageProcessing applyFilterToImage:self.downloadedImage];
-
-    
-    
+    __weak typeof(self) weakself = self;
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, nil);
     dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 0.02 * NSEC_PER_SEC, 0.02 * NSEC_PER_SEC);
     dispatch_source_set_event_handler(timer, ^{
         float received = weakself.task.countOfBytesReceived;
         float expected = weakself.task.countOfBytesExpectedToReceive;
         if (expected!=0) {
-            weakself.item.downloadProgress = received/expected;
+            weakself.item.downloadProgress = received / expected;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"updateProgressNotification" object:self.indexPath];
             });
         }
     });
+    
     dispatch_resume(timer);
+    self.task = [SLVNetworkManager downloadImageWithSession:self.session fromURL:self.item.photoURL withCompletionHandler:^(NSData *data) {
+        UIImage *downloadedImage = [UIImage imageWithData:data];
+        weakself.downloadedImage = [SLVImageProcessing cropImage:downloadedImage width:kItemWidth heigth:kItemHeight];
+        dispatch_semaphore_signal(imageDownloadedSemaphore);
+    }];
     
     dispatch_semaphore_wait(imageDownloadedSemaphore, DISPATCH_TIME_FOREVER);
     dispatch_cancel(timer);
     
-    
     if (self.downloadedImage) {
         [self.imageCache setObject:self.downloadedImage forKey:self.indexPath];
     } else {
-        NSLog(@"error");
+        NSLog(@"ERROR - there was no Image downloaded");
     }
 }
 

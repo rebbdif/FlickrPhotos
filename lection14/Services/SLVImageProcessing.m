@@ -7,6 +7,7 @@
 //
 
 #import "SLVImageProcessing.h"
+@import UIKit;
 
 @implementation SLVImageProcessing
 
@@ -21,7 +22,7 @@
 
 + (UIImage *)cropImage:(UIImage *)origin width:(float)resultWidth heigth:(float)resultHeigth {
     CGSize itemSize = CGSizeMake(resultWidth, resultHeigth);
-
+    
     CGFloat side;
     CGFloat width = origin.size.width;
     CGFloat heigth = origin.size.height;
@@ -40,7 +41,6 @@
         CGImageRef img = CGImageCreateWithImageInRect(origin.CGImage, croppedRect);
         squareImage = [[UIImage alloc] initWithCGImage:img];
     }
-    
     
     UIGraphicsBeginImageContextWithOptions(itemSize, YES, 0.0);
     CGRect imageRect2 = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
