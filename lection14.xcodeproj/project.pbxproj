@@ -16,7 +16,7 @@
 		6350EF861ED5841F00D7C8CE /* SLVNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF851ED5841F00D7C8CE /* SLVNetworkManager.m */; };
 		6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF881ED5843000D7C8CE /* SLVItem.m */; };
 		6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */; };
-		6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */; };
+		6350EF8F1ED5923100D7C8CE /* SLVImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */; };
 		63ABAB831ED60E8900941726 /* SLVImageProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB821ED60E8900941726 /* SLVImageProcessing.m */; };
 		63ABAB881ED873CC00941726 /* SLVImageDownloadOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */; };
 		63ABAB8C1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ABAB8B1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m */; };
@@ -52,8 +52,8 @@
 		6350EF881ED5843000D7C8CE /* SLVItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVItem.m; path = Models/SLVItem.m; sourceTree = "<group>"; };
 		6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVSearchResultsModel.h; path = Models/SLVSearchResultsModel.h; sourceTree = "<group>"; };
 		6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVSearchResultsModel.m; path = Models/SLVSearchResultsModel.m; sourceTree = "<group>"; };
-		6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageDownloadOperation.h; path = Models/ImageDownloadOperation.h; sourceTree = "<group>"; };
-		6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageDownloadOperation.m; path = Models/ImageDownloadOperation.m; sourceTree = "<group>"; };
+		6350EF8D1ED5923100D7C8CE /* SLVImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVImageDownloadOperation.h; path = Models/SLVImageDownloadOperation.h; sourceTree = "<group>"; };
+		6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageDownloadOperation.m; path = Models/SLVImageDownloadOperation.m; sourceTree = "<group>"; };
 		63ABAB811ED60E8900941726 /* SLVImageProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLVImageProcessing.h; path = Services/SLVImageProcessing.h; sourceTree = "<group>"; };
 		63ABAB821ED60E8900941726 /* SLVImageProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageProcessing.m; path = Services/SLVImageProcessing.m; sourceTree = "<group>"; };
 		63ABAB871ED873CB00941726 /* SLVImageDownloadOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SLVImageDownloadOperationTests.m; path = lection14Tests/SLVImageDownloadOperationTests.m; sourceTree = "<group>"; };
@@ -137,8 +137,8 @@
 			children = (
 				6350EF891ED5843000D7C8CE /* SLVSearchResultsModel.h */,
 				6350EF8A1ED5843000D7C8CE /* SLVSearchResultsModel.m */,
-				6350EF8D1ED5923100D7C8CE /* ImageDownloadOperation.h */,
-				6350EF8E1ED5923100D7C8CE /* ImageDownloadOperation.m */,
+				6350EF8D1ED5923100D7C8CE /* SLVImageDownloadOperation.h */,
+				6350EF8E1ED5923100D7C8CE /* SLVImageDownloadOperation.m */,
 				6350EF871ED5843000D7C8CE /* SLVItem.h */,
 				6350EF881ED5843000D7C8CE /* SLVItem.m */,
 			);
@@ -331,7 +331,7 @@
 				6350EF8C1ED5843000D7C8CE /* SLVSearchResultsModel.m in Sources */,
 				6350EF8B1ED5843000D7C8CE /* SLVItem.m in Sources */,
 				04E2FF9F1EBB90A50074C5D9 /* AppDelegate.m in Sources */,
-				6350EF8F1ED5923100D7C8CE /* ImageDownloadOperation.m in Sources */,
+				6350EF8F1ED5923100D7C8CE /* SLVImageDownloadOperation.m in Sources */,
 				04E2FF9C1EBB90A50074C5D9 /* main.m in Sources */,
 				6350EF801ED583FB00D7C8CE /* SLVTableViewCell.m in Sources */,
 				63ABAB8C1ED9ECFB00941726 /* SLVTableViewControllerDataProvider.m in Sources */,

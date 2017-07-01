@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class SLVItem;
-@class SLVNetworkManager;
+@class NSURLSession;
 
 typedef NS_ENUM(NSInteger, SLVImageStatus) {
     SLVImageStatusDownloading,
@@ -20,13 +20,11 @@ typedef NS_ENUM(NSInteger, SLVImageStatus) {
     SLVImageStatusNone
 };
 
-@interface ImageDownloadOperation : NSOperation
+@interface SLVImageDownloadOperation : NSOperation
 
-@property (weak, nonatomic) SLVItem *item;
-@property (strong, nonatomic) NSIndexPath *indexPath;
 @property (assign, nonatomic) SLVImageStatus status;
-@property (weak, nonatomic) NSCache *imageCache;
-@property (weak,nonatomic) NSURLSession *session;
+
+- (instancetype)initWithNetworkSession:(NSURLSession *)session item:(SLVItem *)item indexPath:(NSIndexPath *)indexPath cache:(NSCache *)cache;
 
 - (void)pause;
 - (void)resume;

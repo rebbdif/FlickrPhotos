@@ -10,13 +10,6 @@
 
 @implementation SLVNetworkManager
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-    }
-    return self;
-}
-
 + (void)getModelWithSession:(NSURLSession *)session fromURL:(NSURL *)url withCompletionHandler:(void (^)(NSDictionary *json))completionHandler {
     NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (data) {

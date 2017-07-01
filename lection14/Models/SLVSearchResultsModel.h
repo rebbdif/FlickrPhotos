@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SLVItem.h"
 
-@class ImageDownloadOperation;
+@class SLVImageDownloadOperation;
 @class SLVNetworkManager;
 
 typedef void(^voidBlock)(void);
@@ -22,7 +22,7 @@ typedef void(^voidBlock)(void);
 
 - (void)getItemsForRequest:(NSString *)request withCompletionHandler:(voidBlock)completionHandler;
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler;
-- (void)cancelOperations;
+- (void)pauseOperations;
 - (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image))completion;
 - (void)clearModel;
 

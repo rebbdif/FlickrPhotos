@@ -7,17 +7,17 @@
 //
 
 #import "SLVSearchResultsModel.h"
-#import "ImageDownloadOperation.h"
+#import "SLVImageDownloadOperation.h"
 #import "SLVImageProcessing.h"
 #import "SLVNetworkManager.h"
 
 @interface SLVSearchResultsModel()
 
-@property (assign, nonatomic) NSUInteger page;
-@property (strong, nonatomic) NSMutableDictionary<NSIndexPath *, ImageDownloadOperation *> *imageOperations;
-@property (strong, nonatomic) NSOperationQueue *imagesQueue;
-@property (strong, nonatomic) SLVNetworkManager *networkManager;
-@property (strong, nonatomic) NSURLSession *session;
+@property (nonatomic, assign) NSUInteger page;
+@property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
+@property (nonatomic, strong) NSOperationQueue *imageFilteringQueue;
+@property (nonatomic, strong) SLVNetworkManager *networkManager;
+@property (nonatomic, strong) NSURLSession *session;
 
 @end
 
@@ -26,10 +26,11 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _imageOperations = [NSMutableDictionary new];
-        _imagesQueue = [NSOperationQueue new];
-        _imagesQueue.name = @"imagesQueue";
-        _imagesQueue.qualityOfService = QOS_CLASS_DEFAULT;
+        _imageDownloadQueue = [NSOperationQueue new];
+        _imageDownloadQueue.name = @"imageDownloadQueue";
+        _imageFilteringQueue = [NSOperationQueue new];
+        _imageFilteringQueue.name = @"imageFilteringQueue";
+        _imageFilteringQueue.qualityOfService = NSQualityOfServiceUserInitiated;
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         _imageCache = [NSCache new];
         _page = 1;
@@ -38,11 +39,13 @@
     return self;
 }
 
+#pragma mark - getItems
+
 - (void)getItemsForRequest:(NSString*) request withCompletionHandler:(voidBlock)completionHandler {
     NSString *normalizedRequest = [request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
-    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu",escapedString,apiKey,self.page];
+    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=10&tags=%@%@&page=%lu", escapedString,apiKey, self.page];
     NSURL *url = [NSURL URLWithString:urls];
     [SLVNetworkManager getModelWithSession:self.session fromURL:url withCompletionHandler:^(NSDictionary *json) {
         NSArray *newItems = [self parseData:json];
@@ -66,75 +69,58 @@
     }
 }
 
+#pragma mark - Working with images
+
 - (void)loadImageForIndexPath:(NSIndexPath *)indexPath withCompletionHandler:(voidBlock)completionHandler {
     SLVItem *currentItem = self.items[indexPath.row];
-    if (![self.imageCache objectForKey:currentItem.photoURL]) {
-        if (!self.imageOperations[indexPath]) {
-            ImageDownloadOperation *imageDownloadOperation = [ImageDownloadOperation new];
-            imageDownloadOperation.indexPath = indexPath;
-            imageDownloadOperation.item = currentItem;
-            imageDownloadOperation.session = self.session;
-            imageDownloadOperation.imageCache = self.imageCache;
-            imageDownloadOperation.name = [NSString stringWithFormat:@"imageDownloadOperation for index %lu",indexPath.row];
-            imageDownloadOperation.completionBlock = ^{
-                completionHandler();
-            };
-            [self.imageOperations setObject:imageDownloadOperation forKey:indexPath];
-            [self.imagesQueue addOperation:imageDownloadOperation];
-        } else {
-            if (self.imageOperations[indexPath].status == SLVImageStatusCancelled || self.imageOperations[indexPath].status == SLVImageStatusNone) {
-                [self.imageOperations[indexPath] resume];
+    UIImage *image = [self.imageCache objectForKey:currentItem.photoURL];
+    if (!image) {
+        SLVImageDownloadOperation *imageDownloadOperation = [[SLVImageDownloadOperation alloc] initWithNetworkSession:self.session item:currentItem indexPath:indexPath cache:self.imageCache];
+        imageDownloadOperation.completionBlock = ^{completionHandler(); };
+        
+        for (SLVImageDownloadOperation *operation in self.imageDownloadQueue.operations) {
+            if ([operation.name isEqualToString:imageDownloadOperation.name]) {
+                [operation resume];
+                return;
             }
         }
+        [self.imageDownloadQueue addOperation:imageDownloadOperation];
     } else {
-        completionHandler();
+        if (completionHandler) completionHandler();
     }
 }
 
 - (void)filterItemAtIndexPath:(NSIndexPath *)indexPath filter:(BOOL)filter withCompletionBlock:(void(^)(UIImage *image)) completion {
-    if (filter == YES) {
-        SLVItem *currentItem = self.items[indexPath.row];
-        currentItem.applyFilterSwitherValue = YES;
-        NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
-                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:[self.imageCache objectForKey:indexPath]];
+    SLVItem *currentItem = self.items[indexPath.row];
+    UIImage *image = [self.imageCache objectForKey:currentItem.photoURL];
+    if (image) {
+        if (filter) {
+            currentItem.applyFilterSwitherValue = YES;
+            NSOperation *filterOperation = [NSBlockOperation blockOperationWithBlock:^{
+                UIImage *filteredImage = [SLVImageProcessing applyFilterToImage:image];
                 completion(filteredImage);
-        }];
-        [filterOperation addDependency:[self.imageOperations objectForKey:indexPath]];
-        [self.imagesQueue addOperation:filterOperation];
-        NSLog(@"state changed for indexpath %lu",indexPath.row);
-    } else {
-        self.items[indexPath.row].applyFilterSwitherValue = NO;
-        UIImage *originalImage = [self.imageCache objectForKey:indexPath];
-        completion(originalImage);
-        NSLog(@"state changed for indexpath %lu",indexPath.row);
+            }];
+            [self.imageFilteringQueue addOperation:filterOperation];
+        } else {
+            self.items[indexPath.row].applyFilterSwitherValue = NO;
+            completion(image);
+        }
     }
 }
 
-- (void)cancelOperations {
-    [self.imageOperations enumerateKeysAndObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id key, id object, BOOL *stop) {
-        ImageDownloadOperation *operation = (ImageDownloadOperation *)object;
-        if (operation.isExecuting) {
-            [operation pause];
-        }
-    }];
+#pragma mark - Services
+
+- (void)pauseOperations {
+    for (SLVImageDownloadOperation *operation in _imageDownloadQueue.operations) {
+        [operation pause];
+    }
 }
 
 - (void)clearModel {
     self.items = [NSArray new];
+    [self pauseOperations];
     [self.imageCache removeAllObjects];
     self.page = 0;
-    [self.imageOperations removeAllObjects];
 }
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
-      didWriteData:(int64_t)bytesWritten
- totalBytesWritten:(int64_t)totalBytesWritten
-totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //    self.progressView.progress = (float)totalBytesWritten / totalBytesExpectedToWrite;
-    });
-}
-
-
 
 @end
